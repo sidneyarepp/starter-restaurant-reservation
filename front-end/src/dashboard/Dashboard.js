@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import { today, previous, next } from "../utils/date-time";
+import { useLocation } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
 /**
@@ -9,17 +10,21 @@ import ErrorAlert from "../layout/ErrorAlert";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date }) {
+function Dashboard() {
+  let location = useLocation().search;
+  let correctDate = location.includes('?') ? location.split('=')[1] : today();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [todayDate, setTodayDate] = useState(today());
+  const [todayDate, setTodayDate] = useState(correctDate)
 
-  useEffect(loadDashboard, [date]);
+  console.log(correctDate)
+
+  useEffect(loadDashboard, [todayDate]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date }, abortController.signal)
+    listReservations({ date: `${todayDate}` }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
@@ -34,6 +39,7 @@ function Dashboard({ date }) {
       <div>
         <p>{todayDate}</p>
         <button onClick={() => setTodayDate(previous(todayDate))}>Previous</button>
+        <button onClick={() => setTodayDate(today())}>Today</button>
         <button onClick={() => setTodayDate(next(todayDate))}>Next</button>
       </div>
       <table>

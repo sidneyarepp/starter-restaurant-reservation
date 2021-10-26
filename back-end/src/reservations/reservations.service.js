@@ -9,11 +9,16 @@ function listByDate(date) {
     return knex('reservations')
         .select('*')
         .where({ 'reservation_date': date })
-        .orderBy('last_name', 'asc')
+        .orderBy('reservation_time', 'asc')
 }
 
+function create(reservation) {
+    return knex('reservations')
+        .insert(reservation)
+}
 
 module.exports = {
     list,
     listByDate,
+    create,
 }

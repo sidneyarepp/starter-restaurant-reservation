@@ -14,6 +14,7 @@ import ReservationRoutes from "../reservations/ReservationRoutes";
  * @returns {JSX.Element}
  */
 function Routes() {
+
   return (
     <Switch>
       <Route exact={true} path="/">

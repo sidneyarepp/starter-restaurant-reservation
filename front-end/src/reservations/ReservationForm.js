@@ -12,9 +12,8 @@ function ReservationForm() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log(reservationInfo)
-        // setReservationInfo({ first_name: "", last_name: "", mobile_number: "", reservation_date: "", reservation_time: "", people: 0 })
-        history.push('/dashboard')
+        setReservationInfo({ first_name: "", last_name: "", mobile_number: "", reservation_date: "", reservation_time: "", people: 0 })
+        history.push(`/dashboard?date=${reservationInfo.reservation_date}`)
     }
 
     function handleCancel() {
