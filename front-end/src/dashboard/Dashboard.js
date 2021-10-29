@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import { today, previous, next } from "../utils/date-time";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
 /**
@@ -13,21 +13,33 @@ import ErrorAlert from "../layout/ErrorAlert";
 function Dashboard() {
   let location = useLocation().search;
   let correctDate = location.includes('?') ? location.split('=')[1] : today();
+  const history = useHistory();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [todayDate, setTodayDate] = useState(correctDate)
 
   console.log(correctDate)
 
-  useEffect(loadDashboard, [todayDate]);
+  useEffect(loadDashboard, [correctDate]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date: `${todayDate}` }, abortController.signal)
+    listReservations({ date: `${correctDate}` }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
+  }
+
+  function dateChange(e) {
+    const id = e.target.id
+    if (id === 'previous') {
+      history.push(`/dashboard?date=${previous(correctDate)}`)
+    } else if (id === 'today') {
+      history.push(`/dashboard?date=${today()}`)
+    } else {
+      history.push(`/dashboard?date=${next(correctDate)}`)
+    }
+
   }
 
   return (
@@ -37,10 +49,10 @@ function Dashboard() {
         <h4 className="mb-0">Reservations for date</h4>
       </div>
       <div>
-        <p>{todayDate}</p>
-        <button onClick={() => setTodayDate(previous(todayDate))}>Previous</button>
-        <button onClick={() => setTodayDate(today())}>Today</button>
-        <button onClick={() => setTodayDate(next(todayDate))}>Next</button>
+        <p>{correctDate}</p>
+        <button id='previous' onClick={dateChange}>Previous</button>
+        <button id='today' onClick={dateChange}>Today</button>
+        <button id='next' onClick={dateChange}>Next</button>
       </div>
       <table>
         <thead>

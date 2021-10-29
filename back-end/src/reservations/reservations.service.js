@@ -14,7 +14,7 @@ function listByDate(date) {
 
 function create(reservation) {
     return knex('reservations')
-        .insert(reservation)
+        .insert(reservation, '*');
 }
 
 module.exports = {

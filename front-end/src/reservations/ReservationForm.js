@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 function ReservationForm() {
     const [reservationInfo, setReservationInfo] = useState({ first_name: "", last_name: "", mobile_number: "", reservation_date: "", reservation_time: "", people: 0 })
@@ -12,8 +13,9 @@ function ReservationForm() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        setReservationInfo({ first_name: "", last_name: "", mobile_number: "", reservation_date: "", reservation_time: "", people: 0 })
-        history.push(`/dashboard?date=${reservationInfo.reservation_date}`)
+        console.log(reservationInfo)
+        axios.post('http://localhost:5000/reservations', reservationInfo);
+        history.push(`/dashboard?date=${reservationInfo.reservation_date}`);
     }
 
     function handleCancel() {
