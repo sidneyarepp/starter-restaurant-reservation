@@ -2,6 +2,7 @@
  * List handler for reservation resources
  */
 const service = require("./reservations.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 const validProperties = [
   "first_name",
@@ -44,18 +45,13 @@ async function listByDate(req, res) {
 }
 
 async function create(req, res) {
-  try {
-    let reservation = req.body;
-    await service.create(reservation);
-    res.status(201);
-  }
-  catch (error) {
-    console.log(error);
-  }
+  let reservation = req.body;
+  await service.create(reservation);
+  res.status(201);
 }
 
 module.exports = {
-  list,
-  listByDate,
-  create: [validPropertiesCheck, create],
+  list: asyncErrorBoundary(list),
+  listByDate: asyncErrorBoundary(listByDate),
+  create: [validPropertiesCheck, asyncErrorBoundary(create)],
 };
