@@ -17,8 +17,6 @@ function Dashboard() {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
-  console.log(correctDate)
-
   useEffect(loadDashboard, [correctDate]);
 
   function loadDashboard() {
