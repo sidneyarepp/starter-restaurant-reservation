@@ -3,13 +3,36 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 function ReservationForm() {
-    const [reservationInfo, setReservationInfo] = useState({ first_name: "", last_name: "", mobile_number: "", reservation_date: "", reservation_time: "", people: 0 })
+    const [reservationInfo, setReservationInfo] = useState({ first_name: "", last_name: "", mobile_number: "", reservation_date: "", reservation_time: "", people: 1 })
     const [errorMessage, setErrorMessage] = useState('');
 
     const history = useHistory();
 
+    function formatPhoneNumber(value) {
+        if (!value) return value;
+
+        const phoneNumber = value.replace(/[^\d]/g, "");
+
+        const phoneNumberLength = phoneNumber.length;
+
+        if (phoneNumberLength < 4) return phoneNumber;
+
+        if (phoneNumberLength < 7) {
+            return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+        }
+
+        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(
+            3,
+            6
+        )}-${phoneNumber.slice(6, 10)}`;
+    }
+
     function handleChange(e) {
-        setReservationInfo({ ...reservationInfo, [e.target.name]: e.target.value })
+        if (e.target.name === 'mobile_number') {
+            setReservationInfo({ ...reservationInfo, [e.target.name]: formatPhoneNumber(e.target.value) })
+        } else {
+            setReservationInfo({ ...reservationInfo, [e.target.name]: e.target.value })
+        }
     }
 
     async function handleSubmit(e) {
@@ -42,7 +65,7 @@ function ReservationForm() {
                 <label htmlFor="reservation_time" className="form-label">Reservation Time: </label>
                 <input type="time" name="reservation_time" className="form-control" id="reservation_time" value={reservationInfo.reservation_time} onChange={handleChange} required />
                 <label htmlFor="people" className="form-label">Number of People In the Party</label>
-                <input type="number" name="people" className="form-control" id="people" value={reservationInfo.people} onChange={handleChange} required />
+                <input type="number" name="people" className="form-control" id="people" min="1" value={reservationInfo.people} onChange={handleChange} required />
                 <button type="submit">Submit</button>
                 <button onClick={handleCancel}>Cancel</button>
             </form>

@@ -3,6 +3,7 @@ import { listReservations } from "../utils/api";
 import { today, previous, next } from "../utils/date-time";
 import { useLocation, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
+import ReservationRow from "./ReservationRow";
 
 /**
  * Defines the dashboard page.
@@ -62,16 +63,14 @@ function Dashboard() {
             <th>Reservation Date</th>
             <th>Reservation Time</th>
             <th>Party Size</th>
-            <th>Created Date/Time</th>
-            <th>Updated Date/Time</th>
           </tr>
         </thead>
         <tbody>
-
+          {reservations.map(reservation => <ReservationRow key={reservation.reservation_id} reservation={reservation} />)}
         </tbody>
       </table>
+
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
     </main>
   );
 }
