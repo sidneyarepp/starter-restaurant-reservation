@@ -4,6 +4,8 @@ import { today, previous, next } from "../utils/date-time";
 import { useLocation, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationRow from "./ReservationRow";
+import TableRow from "./TableRow";
+import axios from 'axios';
 
 /**
  * Defines the dashboard page.
@@ -17,8 +19,26 @@ function Dashboard() {
   const history = useHistory();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [tables, setTables] = useState([]);
+  const [tablesError, setTablesError] = useState(null);
 
   useEffect(loadDashboard, [correctDate]);
+  useEffect(() => {
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
+    axios.get('http://localhost:5000/tables', {
+      cancelToken: source.token
+    })
+      .then(data => setTables(data.data.data))
+      .catch(error => {
+        if (axios.isCancel(error)) {
+          console.log('Request canceled', error.message);
+        } else {
+          setTablesError(error);
+        }
+      });
+  }, [])
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -69,8 +89,25 @@ function Dashboard() {
           {reservations.map(reservation => <ReservationRow key={reservation.reservation_id} reservation={reservation} />)}
         </tbody>
       </table>
-
       <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={tablesError} />
+
+      <br /><br />
+      <div className="d-md-flex mb-3">
+        <h4 className="mb-0">Tables</h4>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Table ID</th>
+            <th>Table Name</th>
+            <th>Capacity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tables.map(table => <TableRow key={table.table_id} table={table} />)}
+        </tbody>
+      </table>
     </main>
   );
 }
