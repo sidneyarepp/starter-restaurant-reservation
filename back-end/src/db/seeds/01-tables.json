@@ -1,10 +1,10 @@
 [
-    {"table_name": "barStool_1", "capacity": "1"},
-    {"table_name": "barStool_2", "capacity": "1"},
-    {"table_name": "barStool_3", "capacity": "1"},
-    {"table_name": "barStool_4", "capacity": "1"},
-    {"table_name": "windowTable_1", "capacity": "2"},
-    {"table_name": "windowTable_2", "capacity": "2"},
-    {"table_name": "interiorTable_1", "capacity": "4"},
-    {"table_name": "interiorTable_2", "capacity": "4"}
+    {"table_name": "barStool_1", "capacity": "1", "table_availability": "Free"},
+    {"table_name": "barStool_2", "capacity": "1", "table_availability": "Free"},
+    {"table_name": "barStool_3", "capacity": "1", "table_availability": "Free"},
+    {"table_name": "barStool_4", "capacity": "1", "table_availability": "Free"},
+    {"table_name": "windowTable_1", "capacity": "2", "table_availability": "Free"},
+    {"table_name": "windowTable_2", "capacity": "2", "table_availability": "Free"},
+    {"table_name": "interiorTable_1", "capacity": "4", "table_availability": "Free"},
+    {"table_name": "interiorTable_2", "capacity": "4", "table_availability": "Free"}
 ]
