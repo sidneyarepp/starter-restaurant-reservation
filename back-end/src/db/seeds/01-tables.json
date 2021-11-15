@@ -1,6 +1,6 @@
 [
-    {"table_name": "bar #1", "capacity": "1", "table_availability": "Free"},
-    {"table_name": "bar #2", "capacity": "1", "table_availability": "Free"},
-    {"table_name": "#1", "capacity": "6", "table_availability": "Free"},
-    {"table_name": "#2", "capacity": "6", "table_availability": "Free"}
+    {"table_name": "bar #1", "capacity": "1", "table_availability": "Free", "assigned_reservation_id": null},
+    {"table_name": "bar #2", "capacity": "1", "table_availability": "Free", "assigned_reservation_id": null},
+    {"table_name": "#1", "capacity": "6", "table_availability": "Free", "assigned_reservation_id": null},
+    {"table_name": "#2", "capacity": "6", "table_availability": "Free", "assigned_reservation_id": null}
 ]
