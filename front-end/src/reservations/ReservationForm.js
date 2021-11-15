@@ -35,9 +35,9 @@ function ReservationForm() {
         }
     }
 
-    async function handleSubmit(e) {
+    function handleSubmit(e) {
         e.preventDefault();
-        await axios.post('http://localhost:5000/reservations', reservationInfo)
+        axios.post('http://localhost:5000/reservations', reservationInfo)
             .then(response => {
                 console.log(response);
                 history.push(`/dashboard?date=${reservationInfo.reservation_date}`);
@@ -66,8 +66,8 @@ function ReservationForm() {
                 <input type="time" name="reservation_time" className="form-control" id="reservation_time" value={reservationInfo.reservation_time} onChange={handleChange} required />
                 <label htmlFor="people" className="form-label">Number of People In the Party</label>
                 <input type="number" name="people" className="form-control" id="people" min="1" value={reservationInfo.people} onChange={handleChange} required />
-                <button type="submit">Submit</button>
-                <button onClick={handleCancel}>Cancel</button>
+                <button className="btn btn-success" type="submit">Submit</button>
+                <button className="btn btn-danger" onClick={handleCancel}>Cancel</button>
             </form>
         </div>
     )

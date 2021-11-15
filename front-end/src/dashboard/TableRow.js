@@ -9,7 +9,7 @@ function TableRow({ table }) {
             <td>{table_id}</td>
             <td>{table_name}</td>
             <td>{capacity}</td>
-            <td>{table_availability}</td>
+            <td data-table-id-status={`${table_id}`}>{table_availability}</td>
         </tr>
     )
 }

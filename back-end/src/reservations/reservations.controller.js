@@ -54,14 +54,10 @@ function validationCheck(req, res, next) {
 }
 
 async function list(req, res) {
-  const data = await service.list();
-  res.json({ data: data });
-}
-
-async function listByDate(req, res) {
-  const date = req.query.date;
-  const data = await service.listByDate(date);
-  res.json({ data: data })
+  if (!req.query.date) {
+    res.json({ data: await service.list() })
+  }
+  res.json({ data: await service.listByDate(req.query.date) });
 }
 
 async function create(req, res) {
@@ -72,6 +68,5 @@ async function create(req, res) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  listByDate: asyncErrorBoundary(listByDate),
   create: [validationCheck, asyncErrorBoundary(create)],
 };

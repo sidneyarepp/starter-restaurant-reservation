@@ -30,7 +30,7 @@ function propertyCheck(req, res, next) {
 
 async function list(req, res) {
     const data = await service.list();
-    res.json({ data: data });
+    res.json(data);
 }
 
 async function create(req, res) {
@@ -39,7 +39,12 @@ async function create(req, res) {
     res.sendStatus(201);
 }
 
+function seatReservation(req, res) {
+    console.log(req.body);
+}
+
 module.exports = {
     list: asyncErrorBoundary(list),
     create: [propertyCheck, asyncErrorBoundary(create)],
+    seatReservation: seatReservation
 }

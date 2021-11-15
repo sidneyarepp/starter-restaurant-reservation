@@ -30,7 +30,7 @@ function Dashboard() {
     axios.get('http://localhost:5000/tables', {
       cancelToken: source.token
     })
-      .then(data => setTables(data.data.data))
+      .then(({ data }) => setTables(data))
       .catch(error => {
         if (axios.isCancel(error)) {
           console.log('Request canceled', error.message);
@@ -69,9 +69,9 @@ function Dashboard() {
       </div>
       <div>
         <p>{correctDate}</p>
-        <button id='previous' onClick={dateChange}>Previous</button>
-        <button id='today' onClick={dateChange}>Today</button>
-        <button id='next' onClick={dateChange}>Next</button>
+        <button className="btn btn-primary" id='previous' onClick={dateChange}>Previous</button>
+        <button className="btn btn-primary" id='today' onClick={dateChange}>Today</button>
+        <button className="btn btn-primary" id='next' onClick={dateChange}>Next</button>
       </div>
       <table>
         <thead>
@@ -102,6 +102,7 @@ function Dashboard() {
             <th>Table ID</th>
             <th>Table Name</th>
             <th>Capacity</th>
+            <th>Table Status</th>
           </tr>
         </thead>
         <tbody>
