@@ -38,11 +38,8 @@ function ReservationForm() {
     function handleSubmit(e) {
         e.preventDefault();
         axios.post('http://localhost:5000/reservations', reservationInfo)
-            .then(response => {
-                console.log(response);
-                history.push(`/dashboard?date=${reservationInfo.reservation_date}`);
-
-            })
+            .then(history.push(`/dashboard?date=${reservationInfo.reservation_date}`)
+            )
             .catch(error => setErrorMessage(error.response.data.error));
     }
 

@@ -38,7 +38,7 @@ function Dashboard() {
           setTablesError(error);
         }
       });
-  }, [])
+  }, [correctDate])
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -103,6 +103,7 @@ function Dashboard() {
             <th>Table Name</th>
             <th>Capacity</th>
             <th>Table Status</th>
+            <th>Clear Table</th>
           </tr>
         </thead>
         <tbody>

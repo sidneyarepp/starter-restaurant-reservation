@@ -11,7 +11,7 @@ function TablesForm() {
         setTableInfo({ ...tableInfo, [e.target.name]: e.target.value })
     }
 
-    async function handleSubmit(e) {
+    function handleSubmit(e) {
         e.preventDefault();
         axios.post('http://localhost:5000/tables', tableInfo)
             .then(history.push(`/dashboard`))

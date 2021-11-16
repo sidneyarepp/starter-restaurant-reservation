@@ -7,7 +7,7 @@ function SeatReservation() {
     const [tables, setTables] = useState([]);
     const [tablesError, setTablesError] = useState(null)
     const [reservationSize, setReservationSize] = useState(0);
-    const [selectedTableSize, setSelectedTableSize] = useState(0)
+    const [selectedTable, setSelectedTable] = useState({})
     const reservationId = Number(useLocation().pathname.split('/')[2]);
     const history = useHistory();
 
@@ -48,22 +48,22 @@ function SeatReservation() {
 
 
     function handleChange(e) {
-        setSelectedTableSize(tables.filter(table => table.table_id === Number(e.target.value))[0].capacity)
+        setSelectedTable(tables.filter(table => table.table_id === Number(e.target.value))[0])
     }
 
     function handleSubmit(e) {
         e.preventDefault();
-        if (selectedTableSize < reservationSize) {
+        if (selectedTable.capacity < reservationSize) {
             setTablesError(`Please select a table with a capacity able to handle ${reservationSize} people.`)
         } else {
-            console.log(reservationSize, selectedTableSize);
+            axios.put(`http://localhost:5000/tables/${selectedTable.table_id}/seat`, { 'tableId': selectedTable.table_id, 'reservationId': reservationId })
+                .then(history.push('/dashboard'))
+                .catch(error => setTablesError(error.response.data.error))
         }
-        console.log(reservationId)
     }
 
     function handleCancel(e) {
         e.preventDefault();
-        console.log(history)
         history.goBack();
     }
 

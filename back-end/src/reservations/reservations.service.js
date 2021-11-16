@@ -6,6 +6,9 @@ function list() {
 }
 
 function listByDate(date) {
+    if (!date) {
+        throw new Error("Date is required for reservation service date!")
+    }
     return knex('reservations')
         .select('*')
         .where({ 'reservation_date': date })
@@ -13,6 +16,9 @@ function listByDate(date) {
 }
 
 function create(reservation) {
+    if (!reservation) {
+        throw new Error("Reservation is require for reservation service create.")
+    }
     return knex('reservations')
         .insert(reservation, '*');
 }

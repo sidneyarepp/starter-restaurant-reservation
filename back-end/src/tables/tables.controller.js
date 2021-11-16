@@ -39,12 +39,20 @@ async function create(req, res) {
     res.sendStatus(201);
 }
 
-function seatReservation(req, res) {
-    console.log(req.body);
+async function seatReservation(req, res) {
+    const { tableId, reservationId } = req.body;
+    await service.setSeatReservation(tableId, reservationId);
+    res.sendStatus(201);
+}
+
+async function clearReservation(req, res) {
+    await service.clearTable(req.params.table_id);
+    res.sendStatus(204);
 }
 
 module.exports = {
     list: asyncErrorBoundary(list),
     create: [propertyCheck, asyncErrorBoundary(create)],
-    seatReservation: seatReservation
+    seatReservation: asyncErrorBoundary(seatReservation),
+    clearReservation: asyncErrorBoundary(clearReservation)
 }
