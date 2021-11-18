@@ -32,8 +32,8 @@ function TableRow({ table, setTables, tables }) {
             <td>{table_id}</td>
             <td>{table_name}</td>
             <td>{capacity}</td>
-            <td data-table-id-status={`${table_id}`}>{table_availability}</td>
-            {table_availability === 'occupied' && <td><button className="btn btn-primary" onClick={handleFinish}>Finish</button></td>}
+            <td>{table_availability}</td>
+            {table_availability === 'occupied' && <td><button data-table-id-finish={table.table_id} className="btn btn-primary" onClick={handleFinish}>Finish</button></td>}
         </tr>
     )
 }
