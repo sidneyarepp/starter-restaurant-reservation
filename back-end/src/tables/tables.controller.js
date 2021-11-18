@@ -28,6 +28,28 @@ function propertyCheck(req, res, next) {
     return next();
 }
 
+function tableReservationValidation(req, res, next) {
+    const { table_id, capacity, table_availability } = req.body.table;
+    const { reservation_id, people } = req.body.reservation;
+    const errors = [];
+
+    if (capacity < people) {
+        errors.push(`Please select a table with a capacity of ${people} people or more!`)
+    }
+    if (table_availability === 'occupied') {
+        errors.push(`Please select a table that is currently available!`)
+    }
+    if (errors.length) {
+        return next({
+            status: 400,
+            message: errors.join(' ')
+        })
+    }
+    res.locals.tableId = table_id;
+    res.locals.reservationId = reservation_id;
+    return next()
+}
+
 async function list(req, res) {
     const data = await service.list();
     res.json(data);
@@ -40,12 +62,14 @@ async function create(req, res) {
 }
 
 async function seatReservation(req, res) {
-    const { tableId, reservationId } = req.body;
+    const tableId = res.locals.tableId
+    const reservationId = res.locals.reservationId
     await service.setSeatReservation(tableId, reservationId);
     res.sendStatus(201);
 }
 
 async function clearReservation(req, res) {
+    console.log(req.params.table_id)
     await service.clearTable(req.params.table_id);
     res.sendStatus(204);
 }
@@ -53,6 +77,6 @@ async function clearReservation(req, res) {
 module.exports = {
     list: asyncErrorBoundary(list),
     create: [propertyCheck, asyncErrorBoundary(create)],
-    seatReservation: asyncErrorBoundary(seatReservation),
+    seatReservation: [tableReservationValidation, asyncErrorBoundary(seatReservation)],
     clearReservation: asyncErrorBoundary(clearReservation)
 }

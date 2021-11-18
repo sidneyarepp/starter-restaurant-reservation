@@ -38,7 +38,7 @@ function Dashboard() {
           setTablesError(error);
         }
       });
-  }, [correctDate])
+  }, [])
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -107,7 +107,7 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody>
-          {tables.map(table => <TableRow key={table.table_id} table={table} />)}
+          {tables.map(table => <TableRow key={table.table_id} table={table} tables={tables} setTables={setTables} />)}
         </tbody>
       </table>
     </main>

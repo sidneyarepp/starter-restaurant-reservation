@@ -6,7 +6,7 @@ function SeatReservation() {
 
     const [tables, setTables] = useState([]);
     const [tablesError, setTablesError] = useState(null)
-    const [reservationSize, setReservationSize] = useState(0);
+    const [reservation, setReservation] = useState(0);
     const [selectedTable, setSelectedTable] = useState({})
     const reservationId = Number(useLocation().pathname.split('/')[2]);
     const history = useHistory();
@@ -31,35 +31,35 @@ function SeatReservation() {
     useEffect(() => {
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
-
-
         axios.get('http://localhost:5000/reservations', {
             cancelToken: source.token
         })
-            .then(({ data }) => setReservationSize(data.data.filter(reservation => reservation.reservation_id === reservationId)[0].people))
+            .then(({ data }) => setReservation(data.data.filter(reservation => reservation.reservation_id === reservationId)[0]))
             .catch(error => {
                 if (axios.isCancel(error)) {
                     console.log('Request canceled', error.message);
                 } else {
-                    setTablesError(error);
+                    setTablesError(error.response.data.error);
                 }
             });
     }, [reservationId])
 
 
     function handleChange(e) {
-        setSelectedTable(tables.filter(table => table.table_id === Number(e.target.value))[0])
+        setSelectedTable(tables.filter(table => table.table_id === Number(e.target.value))[0]);
+        setTablesError(null);
     }
 
     function handleSubmit(e) {
         e.preventDefault();
-        if (selectedTable.capacity < reservationSize) {
-            setTablesError(`Please select a table with a capacity able to handle ${reservationSize} people.`)
-        } else {
-            axios.put(`http://localhost:5000/tables/${selectedTable.table_id}/seat`, { 'tableId': selectedTable.table_id, 'reservationId': reservationId })
-                .then(history.push('/dashboard'))
-                .catch(error => setTablesError(error.response.data.error))
-        }
+        axios.put(`http://localhost:5000/tables/${selectedTable.table_id}/seat`, { 'table': selectedTable, 'reservation': reservation })
+            .then(response => {
+                if (response.status - 200 < 100) {
+                    history.push(`/dashboard`)
+                }
+            })
+            .catch(error => setTablesError(error.response.data.error))
+
     }
 
     function handleCancel(e) {
@@ -69,7 +69,7 @@ function SeatReservation() {
 
     return (
         <div>
-            {tablesError && tablesError}
+            {tablesError && <p className="alert alert-danger">{tablesError}</p>}
             <form onSubmit={handleSubmit}>
                 <label htmlFor="table_select">Select Table</label>
                 <br />

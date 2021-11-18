@@ -29,9 +29,9 @@ function setSeatReservation(tableId, reservationId) {
         })
 }
 
-function clearTable(reservationId) {
+function clearTable(tableId) {
     return knex('tables')
-        .where({ assigned_reservation_id: reservationId })
+        .where({ table_id: tableId })
         .update({
             assigned_reservation_id: null,
             table_availability: 'free',

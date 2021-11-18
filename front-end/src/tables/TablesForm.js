@@ -14,7 +14,11 @@ function TablesForm() {
     function handleSubmit(e) {
         e.preventDefault();
         axios.post('http://localhost:5000/tables', tableInfo)
-            .then(history.push(`/dashboard`))
+            .then(response => {
+                if (response.status - 200 < 100) {
+                    history.push(`/dashboard`)
+                }
+            })
             .catch(error => setErrorMessage(error.response.data.error))
     }
 
