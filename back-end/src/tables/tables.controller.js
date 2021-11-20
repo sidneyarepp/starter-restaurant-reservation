@@ -69,7 +69,6 @@ async function seatReservation(req, res) {
 }
 
 async function clearReservation(req, res) {
-    console.log(req.params.table_id)
     await service.clearTable(req.params.table_id);
     res.sendStatus(204);
 }
