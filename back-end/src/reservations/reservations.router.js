@@ -12,6 +12,7 @@ router
     .route("/")
     .get(controller.list)
     .post(controller.create)
+    .put(controller.update)
     .all(methodNotAllowed);
 
 module.exports = router;

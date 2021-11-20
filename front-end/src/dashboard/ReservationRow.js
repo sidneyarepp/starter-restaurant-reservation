@@ -1,9 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function ReservationRow({ reservation }) {
 
-    const { reservation_id, first_name, last_name, mobile_number, reservation_date, reservation_time, people } = reservation;
+    const { reservation_id, first_name, last_name, mobile_number, reservation_date, reservation_time, people, status } = reservation;
+
+    function handleSeating() {
+        axios.put(`http://localhost:5000/reservations/${reservation_id}/status`, { 'status': 'seated' })
+    }
 
     return (
         <tr>
@@ -14,7 +19,8 @@ function ReservationRow({ reservation }) {
             <td>{reservation_date}</td>
             <td>{reservation_time}</td>
             <td>{people}</td>
-            <td><Link className='btn btn-primary' to={`/reservations/${reservation_id}/seat`}>Seat</Link></td>
+            <td data-reservation-id-status={reservation.reservation_id}>{reservation_status}</td>
+            <td>{status === 'booked' && <Link className='btn btn-primary' to={`/reservations/${reservation_id}/seat`} onClick={handleSeating}>Seat</Link>}</td>
         </tr>
     )
 }
