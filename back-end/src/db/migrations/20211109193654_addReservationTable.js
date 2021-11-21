@@ -1,7 +1,7 @@
 
 exports.up = function (knex) {
     return knex.schema.table('tables', table => {
-        table.string('table_availability', 8);
+        table.string('table_availability', 8).defaultTo('free');
     });
 };
 
@@ -10,3 +10,5 @@ exports.down = function (knex) {
         table.dropColumn('table_availability');
     });
 };
+
+

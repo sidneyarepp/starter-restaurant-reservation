@@ -70,7 +70,7 @@ async function seatReservation(req, res) {
 
 async function clearReservation(req, res) {
     await service.clearTable(req.params.table_id);
-    res.sendStatus(204);
+    res.sendStatus(200);
 }
 
 module.exports = {

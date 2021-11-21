@@ -21,8 +21,9 @@ function Dashboard() {
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
+  const [tablesReservationChange, setTablesReservationChange] = useState(0);
 
-  useEffect(loadDashboard, [correctDate]);
+  useEffect(loadDashboard, [correctDate, tablesReservationChange]);
   useEffect(() => {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
@@ -38,7 +39,7 @@ function Dashboard() {
           setTablesError(error);
         }
       });
-  }, [])
+  }, [tablesReservationChange])
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -87,7 +88,9 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody>
-          {reservations.map(reservation => <ReservationRow key={reservation.reservation_id} reservation={reservation} />)}
+          {reservations.map(reservation =>
+            <ReservationRow key={reservation.reservation_id} reservation={reservation} tablesReservationChange={tablesReservationChange} setTablesReservationChange={setTablesReservationChange} />
+          )}
         </tbody>
       </table>
       <ErrorAlert error={reservationsError} />
@@ -108,7 +111,7 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody>
-          {tables.map(table => <TableRow key={table.table_id} table={table} tables={tables} setTables={setTables} />)}
+          {tables.map(table => <TableRow key={table.table_id} table={table} tablesReservationChange={tablesReservationChange} setTablesReservationChange={setTablesReservationChange} />)}
         </tbody>
       </table>
     </main>

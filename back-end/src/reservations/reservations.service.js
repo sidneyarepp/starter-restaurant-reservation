@@ -23,8 +23,15 @@ function create(reservation) {
         .insert(reservation, '*');
 }
 
+function update(reservationId, statusChange) {
+    return knex('reservations')
+        .where({ 'reservation_id': reservationId })
+        .update({ 'status': statusChange });
+}
+
 module.exports = {
     list,
     listByDate,
     create,
+    update,
 }

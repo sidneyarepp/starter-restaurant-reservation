@@ -66,7 +66,15 @@ async function create(req, res) {
   res.sendStatus(201);
 }
 
+async function update(req, res) {
+  let reservationId = req.body.data.reservation_id;
+  let statusChange = req.body.data.status;
+  await service.update(reservationId, statusChange);
+  res.sendStatus(200);
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [validationCheck, asyncErrorBoundary(create)],
+  update: update,
 };
