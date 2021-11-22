@@ -54,6 +54,11 @@ function validationCheck(req, res, next) {
 }
 
 async function list(req, res) {
+  console.log(req.body)
+  if (req.query.mobile_number) {
+    console.log(req.query.mobile_number)
+    res.json({ data: await service.list() })
+  }
   if (!req.query.date) {
     res.json({ data: await service.list() })
   }
