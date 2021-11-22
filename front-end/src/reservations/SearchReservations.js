@@ -6,6 +6,7 @@ function SearchReservations() {
 
     const [searchFormText, setSearchFormText] = useState('');
     const [foundReservations, setFoundReservations] = useState([]);
+    const [reservationSearchError, setReservationSearchError] = useState(null);
 
     function handleChange(e) {
         setSearchFormText(e.target.value)
@@ -13,19 +14,26 @@ function SearchReservations() {
 
     async function findReservation(e) {
         e.preventDefault();
+        setFoundReservations([]);
+        setReservationSearchError(null);
         const CancelToken = axios.CancelToken;
         const source = CancelToken.source();
-
 
         await axios.get(`http://localhost:5000/reservations?mobile_phone=${searchFormText}`, {
             cancelToken: source.token
         })
-            .then(({ data }) => setFoundReservations(data.data))
+            .then(({ data }) => {
+                if (!data.data.length) {
+                    setReservationSearchError('No reservations found')
+                } else {
+                    setFoundReservations(data.data)
+                }
+            })
             .catch(error => {
                 if (axios.isCancel(error)) {
                     console.log('Request canceled', error.message);
                 } else {
-                    console.log(error);
+                    setReservationSearchError(error);
                 }
             })
     }
@@ -57,7 +65,7 @@ function SearchReservations() {
                     }
                 </tbody>
             </table>
-            <p>{!foundReservations.length && 'No reservations were found for the mobile number you entered.'}</p>
+            {reservationSearchError && <p>{reservationSearchError}</p>}
         </div>
     )
 }

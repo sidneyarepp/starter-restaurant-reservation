@@ -50,16 +50,19 @@ function SeatReservation() {
         setTablesError(null);
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        axios.put(`http://localhost:5000/tables/${selectedTable.table_id}/seat`, { 'table': selectedTable, 'reservation': reservation })
-            .then(response => {
-                if (response.status - 200 < 100) {
-                    history.push(`/dashboard`)
-                }
-            })
-            .catch(error => setTablesError(error.response.data.error))
+        try {
+            const updatedTable = await axios.put(`http://localhost:5000/tables/${selectedTable.table_id}/seat`, { 'table': selectedTable, 'reservation': reservation })
+            const updatedReservation = await axios.put(`http://localhost:5000/reservations/${reservation.reservation_id}/status`, { data: { 'status': 'seated', 'reservation_id': reservation.reservation_id } })
 
+            if (updatedTable.status - 200 < 100 && updatedReservation.status - 200 < 100) {
+                history.push(`/dashboard`)
+            }
+        }
+        catch (error) {
+            setTablesError(error.response.data.error)
+        }
     }
 
     function handleCancel(e) {
