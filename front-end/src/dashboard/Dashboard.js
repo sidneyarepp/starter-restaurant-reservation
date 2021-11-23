@@ -120,7 +120,7 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody>
-          {sortedTables.map(table => <TableRow key={table.table_id} table={table} tables={tables} setTables={setTables} setTablesError={setTablesError} />)}
+          {sortedTables.map(table => <TableRow key={table.table_id} table={table} tables={tables} setTables={setTables} setTablesError={setTablesError} reservations={reservations} setReservations={setReservations} />)}
         </tbody>
       </table>
     </main>

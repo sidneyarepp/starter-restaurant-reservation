@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-function TableRow({ table, tables, setTables, setTablesError }) {
+function TableRow({ table, tables, setTables, setTablesError, reservations, setReservations }) {
 
     const { table_id, table_name, capacity, table_availability, assigned_reservation_id } = table;
 
@@ -14,9 +14,15 @@ function TableRow({ table, tables, setTables, setTablesError }) {
                 await axios.put(`http://localhost:5000/reservations/${assigned_reservation_id}/status`, { data: { 'status': 'finished', 'reservation_id': assigned_reservation_id } })
 
                 const tablesArray = tables.filter(table => table.table_id !== table_id);
-                let updatedTable = { ...table, table_availability: 'free' };
-                let updatedTablesArray = [...tablesArray, updatedTable];
+                const updatedTable = { ...table, table_availability: 'free' };
+                const updatedTablesArray = [...tablesArray, updatedTable];
+
+                const reservationsArray = reservations.filter(reservation => reservation.reservation_id !== assigned_reservation_id)
+                const tableReservation = reservations.filter(reservation => reservation.reservation_id === assigned_reservation_id)
+                const updatedReservation = { ...tableReservation[0], 'status': 'finished' }
+                const updatedReservationArray = [...reservationsArray, updatedReservation]
                 setTables(updatedTablesArray)
+                setReservations(updatedReservationArray)
             }
         }
         catch (error) {
