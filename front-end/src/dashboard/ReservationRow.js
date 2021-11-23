@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function ReservationRow({ reservation, tablesReservationChange, setTablesReservationChange }) {
+function ReservationRow({ reservation }) {
 
     const { reservation_id, first_name, last_name, mobile_number, reservation_date, reservation_time, people, status } = reservation;
 

@@ -21,9 +21,18 @@ function Dashboard() {
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
-  const [tablesReservationChange, setTablesReservationChange] = useState(0);
+  const sortedTables = tables.sort((a, b) => {
+    if (a.table_name > b.table_name) {
+      return 1;
+    } else if (a.table_name < b.table_name) {
+      return -1;
+    } else {
+      return 0;
+    };
+  })
 
-  useEffect(loadDashboard, [correctDate, tablesReservationChange]);
+  useEffect(loadDashboard, [correctDate]);
+
   useEffect(() => {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
@@ -39,7 +48,7 @@ function Dashboard() {
           setTablesError(error);
         }
       });
-  }, [tablesReservationChange])
+  }, [])
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -89,7 +98,7 @@ function Dashboard() {
         </thead>
         <tbody>
           {reservations.map(reservation =>
-            <ReservationRow key={reservation.reservation_id} reservation={reservation} tablesReservationChange={tablesReservationChange} setTablesReservationChange={setTablesReservationChange} />
+            <ReservationRow key={reservation.reservation_id} reservation={reservation} />
           )}
         </tbody>
       </table>
@@ -111,7 +120,7 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody>
-          {tables.map(table => <TableRow key={table.table_id} table={table} tablesReservationChange={tablesReservationChange} setTablesReservationChange={setTablesReservationChange} />)}
+          {sortedTables.map(table => <TableRow key={table.table_id} table={table} tables={tables} setTables={setTables} setTablesError={setTablesError} />)}
         </tbody>
       </table>
     </main>
