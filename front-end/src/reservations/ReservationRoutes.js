@@ -13,7 +13,7 @@ function ReservationRoutes() {
             <Route path="/reservations/:reservation_id/seat" exact>
                 <SeatReservation />
             </Route>
-            <Route path="/:reservation_id/edit" exact>
+            <Route path="/reservations/:reservation_id/edit" exact>
                 <EditReservation />
             </Route>
         </Switch>

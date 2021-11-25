@@ -22,6 +22,7 @@ function setSeatReservation(tableId, reservationId) {
         throw new Error("reservationId required for table service setSeatReservation!")
     }
     return knex('tables')
+        .select('*')
         .where({ table_id: tableId })
         .update({
             assigned_reservation_id: reservationId,
@@ -31,6 +32,7 @@ function setSeatReservation(tableId, reservationId) {
 
 function clearTable(tableId) {
     return knex('tables')
+        .select('*')
         .where({ table_id: tableId })
         .update({
             assigned_reservation_id: null,

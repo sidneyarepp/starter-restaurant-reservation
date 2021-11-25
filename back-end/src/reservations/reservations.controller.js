@@ -56,10 +56,10 @@ function validationCheck(req, res, next) {
 async function list(req, res) {
   if (req.query.mobile_phone) {
     const response = await service.search(req.query.mobile_phone)
-    res.json({ data: response })
+    return res.json({ data: response })
   }
   if (!req.query.date) {
-    res.json({ data: await service.list() })
+    return res.json({ data: await service.list() })
   }
   res.json({ data: await service.listByDate(req.query.date) });
 }
@@ -77,8 +77,17 @@ async function update(req, res) {
   res.sendStatus(200);
 }
 
+async function updateReservation(req, res) {
+  console.log(req.body)
+  const reservationId = req.body.reservation_id;
+  let updatedReservation = req.body;
+  await service.updateReservation(reservationId, updatedReservation);
+  res.sendStatus(200);
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [validationCheck, asyncErrorBoundary(create)],
-  update: update,
+  update: asyncErrorBoundary(update),
+  updateReservation: asyncErrorBoundary(updateReservation),
 };
