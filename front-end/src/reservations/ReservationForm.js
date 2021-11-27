@@ -37,7 +37,7 @@ function ReservationForm() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        axios.post('http://localhost:5000/reservations', reservationInfo)
+        axios.post('http://localhost:5000/reservations', { data: reservationInfo })
             .then(response => {
                 if (response.status - 200 < 100) {
                     history.push(`/dashboard?date=${reservationInfo.reservation_date}`);
