@@ -4,6 +4,13 @@ function list() {
   return knex("reservations").select("*");
 }
 
+function read(id) {
+  if (!id) {
+    throw new Error("id is required for reservation service read");
+  }
+  return knex("reservations").select("*").where({ reservation_id: id });
+}
+
 function listByDate(date) {
   if (!date) {
     throw new Error("Date is required for reservation service date!");
@@ -11,7 +18,10 @@ function listByDate(date) {
   return knex("reservations")
     .select("*")
     .where({ reservation_date: date })
-    .orderBy("reservation_time", "asc");
+    .orderBy("reservation_time", "asc")
+    .then((response) =>
+      response.filter((response) => response.status !== "finished")
+    );
 }
 
 function create(reservation) {
@@ -23,18 +33,20 @@ function create(reservation) {
     .then((response) => response[0]);
 }
 
-function update(reservationId, statusChange) {
+function update(reservationId, changedReservation) {
   return knex("reservations")
     .select("*")
     .where({ reservation_id: reservationId })
-    .update({ status: statusChange });
+    .update(changedReservation, "*")
+    .then((response) => response[0]);
 }
 
-function updateReservation(reservationId, reservation) {
+function updateReservationStatus(updatedReservation) {
   return knex("reservations")
     .select("*")
-    .where({ reservation_id: reservationId })
-    .update(reservation, "*");
+    .where({ reservation_id: updatedReservation.reservation_id })
+    .update(updatedReservation, "*")
+    .then((response) => response[0]);
 }
 
 function search(mobile_number) {
@@ -48,9 +60,10 @@ function search(mobile_number) {
 
 module.exports = {
   list,
+  read,
   listByDate,
   create,
   update,
+  updateReservationStatus,
   search,
-  updateReservation,
 };

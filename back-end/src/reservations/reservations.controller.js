@@ -30,10 +30,28 @@ function hasData(req, res, next) {
   if (!req.body.data) {
     return next({
       status: 400,
-      message: "data from request body is missing.",
+      message: "data from the request body is missing.",
     });
   }
   next();
+}
+
+async function reservationExists(req, res, next) {
+  const { reservation_id } = req.params;
+  const [reservation] = await service.read(reservation_id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
+  }
+  next({
+    status: 404,
+    message: `Reservation ID ${reservation_id} does not exist.`,
+  });
+}
+
+function read(req, res) {
+  const reservation = res.locals.reservation;
+  res.status(200).json({ data: reservation });
 }
 
 function hasRequiredProperties(req, res, next) {
@@ -213,9 +231,48 @@ function peopleGreaterThanZero(req, res, next) {
   next();
 }
 
+function correctTableCreationStatus(req, res, next) {
+  const status = req.body.data.status;
+  if (status === "finished" || status === "seated") {
+    return next({
+      status: 400,
+      message:
+        "A reservation cannot be created with a status of seated or finished.",
+    });
+  }
+  next();
+}
+
+function correctTableUpdateStatus(req, res, next) {
+  const status = res.locals.reservation.status;
+  if (status === "finished") {
+    return next({
+      status: 400,
+      message: "A finished reservation cannot be updated.",
+    });
+  }
+  next();
+}
+
+function hasValidStatusRequest(req, res, next) {
+  const { status } = req.body.data;
+  if (
+    status == "booked" ||
+    status === "seated" ||
+    status === "finished" ||
+    status === "cancelled"
+  ) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: `The reservation status ${status} is invalid.`,
+  });
+}
+
 async function list(req, res) {
-  if (req.query.mobile_phone) {
-    const response = await service.search(req.query.mobile_phone);
+  if (req.query.mobile_number) {
+    const response = await service.search(req.query.mobile_number);
     return res.status(200).json({ data: response });
   }
   if (!req.query.date) {
@@ -225,25 +282,29 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
-  let reservation = req.body.data;
-  res.status(201).json({ data: await service.create(reservation) });
+  const reservation = req.body.data;
+  const response = await service.create(reservation);
+  res.status(201).json({ data: response });
 }
 
 async function update(req, res) {
-  let reservationId = req.body.data.reservation_id;
-  let statusChange = req.body.data.status;
-  await service.update(reservationId, statusChange);
-  res.sendStatus(200);
+  const reservationId = res.locals.reservation.reservation_id;
+  const changedReservation = req.body.data;
+  const updatedReservation = await service.update(
+    reservationId,
+    changedReservation
+  );
+  res.status(200).json({ data: updatedReservation });
 }
 
-async function updateReservation(req, res) {
-  const reservationId = req.body.data.reservation_id;
-  let updatedReservation = req.body.data;
-  await service.updateReservation(reservationId, updatedReservation);
-  res.sendStatus(200);
+async function updateReservationStatus(req, res) {
+  const updatedReservation = { ...res.locals.reservation, ...req.body.data };
+  const response = await service.updateReservationStatus(updatedReservation);
+  res.status(200).json({ data: response });
 }
 
 module.exports = {
+  read: [asyncErrorBoundary(reservationExists), read],
   list: asyncErrorBoundary(list),
   create: [
     hasData,
@@ -260,8 +321,48 @@ module.exports = {
     hasPeople,
     peopleGreaterThanZero,
     peopleIsNotNaN,
+    correctTableCreationStatus,
     asyncErrorBoundary(create),
   ],
-  update: asyncErrorBoundary(update),
-  updateReservation: asyncErrorBoundary(updateReservation),
+  update: [
+    hasData,
+    reservationExists,
+    hasRequiredProperties,
+    allPropertiesValid,
+    hasFirstName,
+    hasLastName,
+    hasMobileNumber,
+    hasReservationDate,
+    reservationDateIsADate,
+    hasReservationTime,
+    reservationTimeIsATime,
+    reservationDateAndTimeInFuture,
+    hasPeople,
+    peopleGreaterThanZero,
+    peopleIsNotNaN,
+    correctTableUpdateStatus,
+    hasData,
+    hasRequiredProperties,
+    allPropertiesValid,
+    hasFirstName,
+    hasLastName,
+    hasMobileNumber,
+    hasReservationDate,
+    reservationDateIsADate,
+    hasReservationTime,
+    reservationTimeIsATime,
+    reservationDateAndTimeInFuture,
+    hasPeople,
+    peopleGreaterThanZero,
+    peopleIsNotNaN,
+    correctTableUpdateStatus,
+    asyncErrorBoundary(update),
+  ],
+  updateReservationStatus: [
+    hasData,
+    reservationExists,
+    correctTableUpdateStatus,
+    hasValidStatusRequest,
+    asyncErrorBoundary(updateReservationStatus),
+  ],
 };
