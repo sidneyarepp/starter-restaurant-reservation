@@ -36,7 +36,7 @@ function SearchReservations() {
         if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
         } else {
-          setReservationSearchError(error);
+          setReservationSearchError(error.response.data.error);
         }
       });
   }

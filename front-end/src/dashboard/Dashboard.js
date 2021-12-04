@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import { today, previous, next } from "../utils/date-time";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationRow from "./ReservationRow";
 import TableRow from "./TableRow";
-import axios from 'axios';
+import axios from "axios";
 
 /**
  * Defines the dashboard page.
@@ -15,8 +15,8 @@ import axios from 'axios';
  */
 function Dashboard() {
   let location = useLocation().search;
-  let correctDate = location.includes('?') ? location.split('=')[1] : today();
-  const history = useHistory();
+  let correctDate = location.includes("?") ? location.split("=")[1] : today();
+  const navigate = useNavigate();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
@@ -28,8 +28,8 @@ function Dashboard() {
       return -1;
     } else {
       return 0;
-    };
-  })
+    }
+  });
 
   useEffect(loadDashboard, [correctDate]);
 
@@ -37,18 +37,19 @@ function Dashboard() {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
 
-    axios.get('http://localhost:5000/tables', {
-      cancelToken: source.token
-    })
-      .then(({ data }) => setTables(data))
-      .catch(error => {
+    axios
+      .get("http://localhost:5000/tables", {
+        cancelToken: source.token,
+      })
+      .then(({ data }) => setTables(data.data))
+      .catch((error) => {
         if (axios.isCancel(error)) {
-          console.log('Request canceled', error.message);
+          console.log("Request canceled", error.message);
         } else {
           setTablesError(error);
         }
       });
-  }, [])
+  }, []);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -60,15 +61,14 @@ function Dashboard() {
   }
 
   function dateChange(e) {
-    const id = e.target.id
-    if (id === 'previous') {
-      history.push(`/dashboard?date=${previous(correctDate)}`)
-    } else if (id === 'today') {
-      history.push(`/dashboard?date=${today()}`)
+    const id = e.target.id;
+    if (id === "previous") {
+      navigate(`/dashboard?date=${previous(correctDate)}`);
+    } else if (id === "today") {
+      navigate(`/dashboard?date=${today()}`);
     } else {
-      history.push(`/dashboard?date=${next(correctDate)}`)
+      navigate(`/dashboard?date=${next(correctDate)}`);
     }
-
   }
 
   return (
@@ -79,9 +79,15 @@ function Dashboard() {
       </div>
       <div>
         <p>{correctDate}</p>
-        <button className="btn btn-primary" id='previous' onClick={dateChange}>Previous</button>
-        <button className="btn btn-primary" id='today' onClick={dateChange}>Today</button>
-        <button className="btn btn-primary" id='next' onClick={dateChange}>Next</button>
+        <button className="btn btn-primary" id="previous" onClick={dateChange}>
+          Previous
+        </button>
+        <button className="btn btn-primary" id="today" onClick={dateChange}>
+          Today
+        </button>
+        <button className="btn btn-primary" id="next" onClick={dateChange}>
+          Next
+        </button>
       </div>
       <table>
         <thead>
@@ -97,15 +103,19 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody>
-          {reservations.map(reservation =>
-            <ReservationRow key={reservation.reservation_id} reservation={reservation} />
-          )}
+          {reservations.map((reservation) => (
+            <ReservationRow
+              key={reservation.reservation_id}
+              reservation={reservation}
+            />
+          ))}
         </tbody>
       </table>
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
 
-      <br /><br />
+      <br />
+      <br />
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Tables</h4>
       </div>
@@ -120,7 +130,17 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody>
-          {sortedTables.map(table => <TableRow key={table.table_id} table={table} tables={tables} setTables={setTables} setTablesError={setTablesError} reservations={reservations} setReservations={setReservations} />)}
+          {sortedTables.map((table) => (
+            <TableRow
+              key={table.table_id}
+              table={table}
+              tables={tables}
+              setTables={setTables}
+              setTablesError={setTablesError}
+              reservations={reservations}
+              setReservations={setReservations}
+            />
+          ))}
         </tbody>
       </table>
     </main>

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function TablesForm() {
   const [tableInfo, setTableInfo] = useState({ table_name: "", capacity: 1 });
   const [errorMessage, setErrorMessage] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setTableInfo({ ...tableInfo, [e.target.name]: e.target.value });
@@ -17,14 +17,14 @@ function TablesForm() {
       .post("http://localhost:5000/tables", { data: tableInfo })
       .then((response) => {
         if (response.status - 200 < 100) {
-          history.push(`/dashboard`);
+          navigate(`/dashboard`);
         }
       })
       .catch((error) => setErrorMessage(error.response.data.error));
   }
 
   function handleCancel() {
-    history.goBack();
+    navigate(-1);
   }
 
   return (

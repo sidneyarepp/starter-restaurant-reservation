@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Menu from "./Menu";
-import Routes from "./Routes";
+import SiteRoutes from "./SiteRoutes";
 
 import "./Layout.css";
 
@@ -12,9 +12,6 @@ import "./Layout.css";
  * @returns {JSX.Element}
  */
 function Layout() {
-
-  const [reservations, setReservations] = useState([]);
-
   return (
     <div className="container-fluid">
       <div className="row h-100">
@@ -22,7 +19,7 @@ function Layout() {
           <Menu />
         </div>
         <div className="col">
-          <Routes {...{ reservations, setReservations }} />
+          <SiteRoutes />
         </div>
       </div>
     </div>

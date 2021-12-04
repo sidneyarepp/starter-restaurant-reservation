@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function SeatReservation() {
@@ -8,7 +8,7 @@ function SeatReservation() {
   const [reservation, setReservation] = useState(0);
   const [selectedTable, setSelectedTable] = useState({});
   const reservationId = Number(useLocation().pathname.split("/")[2]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const CancelToken = axios.CancelToken;
@@ -18,12 +18,12 @@ function SeatReservation() {
       .get("http://localhost:5000/tables", {
         cancelToken: source.token,
       })
-      .then(({ data }) => setTables(data))
+      .then(({ data }) => setTables(data.data))
       .catch((error) => {
         if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
         } else {
-          setTablesError(error);
+          setTablesError(error.response.data.error);
         }
       });
   }, []);
@@ -84,7 +84,7 @@ function SeatReservation() {
         updatedTable.status - 200 < 100 &&
         updatedReservation.status - 200 < 100
       ) {
-        history.push(`/dashboard`);
+        navigate(`/dashboard`);
       }
     } catch (error) {
       setTablesError(error.response.data.error);
@@ -93,7 +93,7 @@ function SeatReservation() {
 
   function handleCancel(e) {
     e.preventDefault();
-    history.goBack();
+    navigate(-1);
   }
 
   return (

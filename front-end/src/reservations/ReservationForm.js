@@ -1,76 +1,168 @@
-import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function ReservationForm() {
-    const [reservationInfo, setReservationInfo] = useState({ first_name: "", last_name: "", mobile_number: "", reservation_date: "", reservation_time: "", people: 1 })
-    const [errorMessage, setErrorMessage] = useState('');
+  const [reservationInfo, setReservationInfo] = useState({
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "",
+    reservation_time: "",
+    people: 1,
+    status: "booked",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const history = useHistory();
+  const navigate = useNavigate();
 
-    function formatPhoneNumber(value) {
-        if (!value) return value;
+  function formatPhoneNumber(value) {
+    if (!value) return value;
 
-        const phoneNumber = value.replace(/[^\d]/g, "");
+    const phoneNumber = value.replace(/[^\d]/g, "");
 
-        const phoneNumberLength = phoneNumber.length;
+    const phoneNumberLength = phoneNumber.length;
 
-        if (phoneNumberLength < 4) return phoneNumber;
+    if (phoneNumberLength < 4) return phoneNumber;
 
-        if (phoneNumberLength < 7) {
-            return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+    if (phoneNumberLength < 7) {
+      return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
+    }
+
+    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(
+      3,
+      6
+    )}-${phoneNumber.slice(6, 10)}`;
+  }
+
+  function handleChange(e) {
+    if (e.target.name === "mobile_number") {
+      setReservationInfo({
+        ...reservationInfo,
+        [e.target.name]: formatPhoneNumber(e.target.value),
+      });
+    } else if (e.target.name === "people") {
+      setReservationInfo({
+        ...reservationInfo,
+        [e.target.name]: Number(e.target.value),
+      });
+    } else {
+      setReservationInfo({
+        ...reservationInfo,
+        [e.target.name]: e.target.value,
+      });
+    }
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/reservations", { data: reservationInfo })
+      .then((response) => {
+        if (response.status - 200 < 100) {
+          navigate(`/dashboard?date=${reservationInfo.reservation_date}`);
         }
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data.error);
+      });
+  }
 
-        return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(
-            3,
-            6
-        )}-${phoneNumber.slice(6, 10)}`;
-    }
+  function handleCancel() {
+    navigate(-1);
+  }
 
-    function handleChange(e) {
-        if (e.target.name === 'mobile_number') {
-            setReservationInfo({ ...reservationInfo, [e.target.name]: formatPhoneNumber(e.target.value) })
-        } else {
-            setReservationInfo({ ...reservationInfo, [e.target.name]: e.target.value })
-        }
-    }
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        axios.post('http://localhost:5000/reservations', { data: reservationInfo })
-            .then(response => {
-                if (response.status - 200 < 100) {
-                    history.push(`/dashboard?date=${reservationInfo.reservation_date}`);
-                }
-            })
-            .catch(error => setErrorMessage(error.response.data.error));
-    }
-
-    function handleCancel() {
-        history.goBack()
-    }
-
-    return (
-        <div>
-            {errorMessage !== '' && <p className="alert alert-danger">{errorMessage}</p>}
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="first_name" className="form-label">First Name: </label>
-                <input type="text" name="first_name" className="form-control" id="first_name" value={reservationInfo.first_name} onChange={handleChange} placeholder="John" required />
-                <label htmlFor="last_name" className="form-label">Last Name: </label>
-                <input type="text" name="last_name" className="form-control" id="last_name" value={reservationInfo.last_name} onChange={handleChange} placeholder="Smith" required />
-                <label htmlFor="mobile_number" className="form-label">Mobile Number: </label>
-                <input type="tel" name="mobile_number" className="form-control" id="mobile_number" value={reservationInfo.mobile_number} onChange={handleChange} placeholder="555-123-4567" required />
-                <label htmlFor="reservation_date" className="form-label">Reservation Date: </label>
-                <input type="date" name="reservation_date" className="form-control" id="reservation_date" value={reservationInfo.reservation_date} onChange={handleChange} required />
-                <label htmlFor="reservation_time" className="form-label">Reservation Time: </label>
-                <input type="time" name="reservation_time" className="form-control" id="reservation_time" value={reservationInfo.reservation_time} onChange={handleChange} required />
-                <label htmlFor="people" className="form-label">Number of People In the Party</label>
-                <input type="number" name="people" className="form-control" id="people" min="1" value={reservationInfo.people} onChange={handleChange} required />
-                <button className="btn btn-success" type="submit">Submit</button>
-                <button className="btn btn-danger" onClick={handleCancel}>Cancel</button>
-            </form>
-        </div>
-    )
+  return (
+    <div>
+      {errorMessage !== "" && (
+        <p className="alert alert-danger">{errorMessage}</p>
+      )}
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="first_name" className="form-label">
+          First Name:{" "}
+        </label>
+        <input
+          type="text"
+          name="first_name"
+          className="form-control"
+          id="first_name"
+          value={reservationInfo.first_name}
+          onChange={handleChange}
+          placeholder="John"
+          required
+        />
+        <label htmlFor="last_name" className="form-label">
+          Last Name:{" "}
+        </label>
+        <input
+          type="text"
+          name="last_name"
+          className="form-control"
+          id="last_name"
+          value={reservationInfo.last_name}
+          onChange={handleChange}
+          placeholder="Smith"
+          required
+        />
+        <label htmlFor="mobile_number" className="form-label">
+          Mobile Number:{" "}
+        </label>
+        <input
+          type="tel"
+          name="mobile_number"
+          className="form-control"
+          id="mobile_number"
+          value={reservationInfo.mobile_number}
+          onChange={handleChange}
+          placeholder="555-123-4567"
+          required
+        />
+        <label htmlFor="reservation_date" className="form-label">
+          Reservation Date:{" "}
+        </label>
+        <input
+          type="date"
+          name="reservation_date"
+          className="form-control"
+          id="reservation_date"
+          value={reservationInfo.reservation_date}
+          onChange={handleChange}
+          required
+        />
+        <label htmlFor="reservation_time" className="form-label">
+          Reservation Time:{" "}
+        </label>
+        <input
+          type="time"
+          name="reservation_time"
+          className="form-control"
+          id="reservation_time"
+          value={reservationInfo.reservation_time}
+          onChange={handleChange}
+          required
+        />
+        <label htmlFor="people" className="form-label">
+          Number of People In the Party
+        </label>
+        <input
+          type="number"
+          name="people"
+          className="form-control"
+          id="people"
+          min={1}
+          value={reservationInfo.people}
+          onChange={handleChange}
+          required
+        />
+        <button className="btn btn-success" type="submit">
+          Submit
+        </button>
+        <button className="btn btn-danger" onClick={handleCancel}>
+          Cancel
+        </button>
+      </form>
+    </div>
+  );
 }
 
 export default ReservationForm;

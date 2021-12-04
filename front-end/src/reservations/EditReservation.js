@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function EditReservation() {
@@ -25,7 +25,7 @@ function EditReservation() {
     reservation_time,
     people,
   } = reservationInfo;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const CancelToken = axios.CancelToken;
@@ -46,7 +46,7 @@ function EditReservation() {
         if (axios.isCancel(error)) {
           console.log("Request canceled", error.message);
         } else {
-          setErrorMessage(error);
+          setErrorMessage(error.response.data.error);
         }
       });
   }, [reservationId]);
@@ -71,6 +71,11 @@ function EditReservation() {
         ...reservationInfo,
         [e.target.name]: formatPhoneNumber(e.target.value),
       });
+    } else if (e.target.name === "people") {
+      setReservationInfo({
+        ...reservationInfo,
+        [e.target.name]: Number(e.target.value),
+      });
     } else {
       setReservationInfo({
         ...reservationInfo,
@@ -82,19 +87,27 @@ function EditReservation() {
   function handleSubmit(e) {
     e.preventDefault();
     axios
-      .put("http://localhost:5000/reservations/:reservation_id", {
-        data: reservationInfo,
-      })
+      .put(
+        `http://localhost:5000/reservations/${reservationInfo.reservation_id}`,
+        {
+          data: {
+            ...reservationInfo,
+            reservation_time: reservation_time.slice(0, 5),
+          },
+        }
+      )
       .then((response) => {
         if (response.status - 200 < 100) {
-          history.goBack();
+          navigate(-1);
         }
       })
-      .catch((error) => setErrorMessage(error.response.data.error));
+      .catch((error) => {
+        setErrorMessage(error.response.data.error);
+      });
   }
 
   function handleCancel() {
-    history.goBack();
+    navigate(-1);
   }
 
   return (
