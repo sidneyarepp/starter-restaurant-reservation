@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -15,9 +15,9 @@ describe("US-01 - Create and list reservations - E2E", () => {
   let browser;
 
   beforeAll(async () => {
+    browser = await puppeteer.launch();
     await fsPromises.mkdir("./.screenshots", { recursive: true });
     setDefaultOptions({ timeout: 1000 });
-    browser = await puppeteer.launch();
   });
 
   beforeEach(async () => {

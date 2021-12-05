@@ -32,7 +32,6 @@ function TableRow({
           {
             data: {
               status: "finished",
-              reservation_id: assigned_reservation_id,
             },
           }
         );
@@ -72,7 +71,7 @@ function TableRow({
       <td>{table_id}</td>
       <td>{table_name}</td>
       <td>{capacity}</td>
-      <td>{table_availability}</td>
+      <td data-table-id-status={table.table_id}>{table_availability}</td>
       {table_availability === "occupied" && (
         <td>
           <button

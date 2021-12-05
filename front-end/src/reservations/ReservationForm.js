@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 function ReservationForm() {
@@ -14,7 +14,7 @@ function ReservationForm() {
   });
   const [errorMessage, setErrorMessage] = useState("");
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   function formatPhoneNumber(value) {
     if (!value) return value;
@@ -60,7 +60,7 @@ function ReservationForm() {
       .post("http://localhost:5000/reservations", { data: reservationInfo })
       .then((response) => {
         if (response.status - 200 < 100) {
-          navigate(`/dashboard?date=${reservationInfo.reservation_date}`);
+          history.push(`/dashboard?date=${reservationInfo.reservation_date}`);
         }
       })
       .catch((error) => {
@@ -69,7 +69,7 @@ function ReservationForm() {
   }
 
   function handleCancel() {
-    navigate(-1);
+    history.goBack();
   }
 
   return (
@@ -79,7 +79,7 @@ function ReservationForm() {
       )}
       <form onSubmit={handleSubmit}>
         <label htmlFor="first_name" className="form-label">
-          First Name:{" "}
+          First Name:
         </label>
         <input
           type="text"
@@ -92,7 +92,7 @@ function ReservationForm() {
           required
         />
         <label htmlFor="last_name" className="form-label">
-          Last Name:{" "}
+          Last Name:
         </label>
         <input
           type="text"
@@ -105,7 +105,7 @@ function ReservationForm() {
           required
         />
         <label htmlFor="mobile_number" className="form-label">
-          Mobile Number:{" "}
+          Mobile Number:
         </label>
         <input
           type="tel"
@@ -118,7 +118,7 @@ function ReservationForm() {
           required
         />
         <label htmlFor="reservation_date" className="form-label">
-          Reservation Date:{" "}
+          Reservation Date:
         </label>
         <input
           type="date"
@@ -130,7 +130,7 @@ function ReservationForm() {
           required
         />
         <label htmlFor="reservation_time" className="form-label">
-          Reservation Time:{" "}
+          Reservation Time:
         </label>
         <input
           type="time"
@@ -142,7 +142,7 @@ function ReservationForm() {
           required
         />
         <label htmlFor="people" className="form-label">
-          Number of People In the Party
+          Number of People In the Party:
         </label>
         <input
           type="number"

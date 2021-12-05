@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import { today, previous, next } from "../utils/date-time";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationRow from "./ReservationRow";
 import TableRow from "./TableRow";
@@ -16,7 +16,7 @@ import axios from "axios";
 function Dashboard() {
   let location = useLocation().search;
   let correctDate = location.includes("?") ? location.split("=")[1] : today();
-  const navigate = useNavigate();
+  const history = useHistory();
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
@@ -63,11 +63,11 @@ function Dashboard() {
   function dateChange(e) {
     const id = e.target.id;
     if (id === "previous") {
-      navigate(`/dashboard?date=${previous(correctDate)}`);
+      history.push(`/dashboard?date=${previous(correctDate)}`);
     } else if (id === "today") {
-      navigate(`/dashboard?date=${today()}`);
+      history.push(`/dashboard?date=${today()}`);
     } else {
-      navigate(`/dashboard?date=${next(correctDate)}`);
+      history.push(`/dashboard?date=${next(correctDate)}`);
     }
   }
 

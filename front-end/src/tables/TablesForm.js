@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 function TablesForm() {
   const [tableInfo, setTableInfo] = useState({ table_name: "", capacity: 1 });
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+  const history = useHistory();
 
   function handleChange(e) {
     setTableInfo({ ...tableInfo, [e.target.name]: e.target.value });
@@ -17,14 +17,14 @@ function TablesForm() {
       .post("http://localhost:5000/tables", { data: tableInfo })
       .then((response) => {
         if (response.status - 200 < 100) {
-          navigate(`/dashboard`);
+          history.push(`/dashboard`);
         }
       })
       .catch((error) => setErrorMessage(error.response.data.error));
   }
 
   function handleCancel() {
-    navigate(-1);
+    history.goBack();
   }
 
   return (
@@ -34,7 +34,7 @@ function TablesForm() {
       )}
       <form onSubmit={handleSubmit}>
         <label htmlFor="table_name" className="form-label">
-          Table Name:{" "}
+          Table Name:
         </label>
         <input
           type="text"
@@ -47,7 +47,7 @@ function TablesForm() {
           required
         />
         <label htmlFor="capacity" className="form-label">
-          Capacity:{" "}
+          Capacity:
         </label>
         <input
           type="number"

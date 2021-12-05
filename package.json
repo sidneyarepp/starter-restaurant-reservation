@@ -14,7 +14,7 @@
     "start": "npx concurrently 'npm run start:backend' 'npm run start:frontend'",
     "start:backend": "npm --prefix ./back-end start",
     "start:frontend": "npm --prefix ./front-end start",
-    "start:dev": "npx concurrently 'npm run start:dev --prefix ./back-end' 'npm start --prefix ./front-end'",
+    "start:dev": "npx concurrently \"npm run start:dev --prefix ./back-end\" \"npm start --prefix ./front-end\" ",
     "test": "npm run test:frontend && npm run test:backend",
     "test:backend": "npm test --prefix ./back-end",
     "test:frontend": "npm test --prefix ./front-end",
@@ -50,9 +50,6 @@
   "license": "UNLICENSED",
   "dependencies": {
     "axios": "^0.24.0",
-    "knex": "^0.95.13",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^6.0.2",
-    "react-scripts": "^4.0.3"
+    "puppeteer-core": "^12.0.1"
   }
 }

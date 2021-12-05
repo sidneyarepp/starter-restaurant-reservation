@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import axios from "axios";
 
 function EditReservation() {
@@ -25,7 +25,7 @@ function EditReservation() {
     reservation_time,
     people,
   } = reservationInfo;
-  const navigate = useNavigate();
+  const history = useHistory();
 
   useEffect(() => {
     const CancelToken = axios.CancelToken;
@@ -98,7 +98,7 @@ function EditReservation() {
       )
       .then((response) => {
         if (response.status - 200 < 100) {
-          navigate(-1);
+          history.goBack();
         }
       })
       .catch((error) => {
@@ -107,7 +107,7 @@ function EditReservation() {
   }
 
   function handleCancel() {
-    navigate(-1);
+    history.push("/dashboard");
   }
 
   return (
