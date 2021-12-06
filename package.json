@@ -49,7 +49,6 @@
   "author": "Thinkful, Inc.",
   "license": "UNLICENSED",
   "dependencies": {
-    "axios": "^0.24.0",
-    "puppeteer-core": "^12.0.1"
+    "axios": "^0.24.0"
   }
 }
