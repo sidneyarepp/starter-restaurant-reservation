@@ -46,14 +46,14 @@ function setSeatReservation(tableId, reservationId) {
   }
   return knex("tables").select("*").where({ table_id: tableId }).update({
     assigned_reservation_id: reservationId,
-    table_availability: "occupied",
+    table_availability: "Occupied",
   });
 }
 
 function clearTable(tableId) {
   return knex("tables").select("*").where({ table_id: tableId }).update({
     assigned_reservation_id: null,
-    table_availability: "free",
+    table_availability: "Free",
   });
 }
 

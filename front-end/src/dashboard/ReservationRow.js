@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 function ReservationRow({ reservation }) {
@@ -35,6 +35,7 @@ function ReservationRow({ reservation }) {
   }
 
   const correctStatus = status !== "finished" && status !== "cancelled";
+  const history = useHistory();
 
   return (
     correctStatus && (
@@ -51,21 +52,23 @@ function ReservationRow({ reservation }) {
         </td>
         <td>
           {status === "booked" && (
-            <Link
+            <button
               className="btn btn-primary"
-              to={`/reservations/${reservation_id}/seat`}
+              onClick={() =>
+                history.push(`/reservations/${reservation_id}/seat`)
+              }
             >
               Seat
-            </Link>
+            </button>
           )}
         </td>
         <td>
-          <Link
+          <button
             className="btn btn-primary"
-            to={`/reservations/${reservation_id}/edit`}
+            onClick={() => history.push(`/reservations/${reservation_id}/edit`)}
           >
             Edit
-          </Link>
+          </button>
         </td>
         <td>
           <button

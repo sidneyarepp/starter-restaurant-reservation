@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 function TablesForm() {
-  const [tableInfo, setTableInfo] = useState({ table_name: "", capacity: 1 });
+  const [tableInfo, setTableInfo] = useState({ table_name: "", capacity: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
 
