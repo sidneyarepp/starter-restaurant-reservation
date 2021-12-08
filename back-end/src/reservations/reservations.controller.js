@@ -118,17 +118,6 @@ function hasMobileNumber(req, res, next) {
   });
 }
 
-function mobileNumberLengthCorrect(req, res, next) {
-  let mobile_number = res.locals.mobile_number;
-  if (mobile_number.length !== 12) {
-    return next({
-      status: 400,
-      message: "Please enter a full mobile number including area code.",
-    });
-  }
-  next();
-}
-
 function hasReservationDate(req, res, next) {
   const reservation_date = req.body.data.reservation_date;
   if (reservation_date && reservation_date !== "") {
@@ -324,7 +313,6 @@ module.exports = {
     hasFirstName,
     hasLastName,
     hasMobileNumber,
-    mobileNumberLengthCorrect,
     hasReservationDate,
     reservationDateIsADate,
     hasReservationTime,

@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-function ReservationRow({ reservation }) {
+function ReservationRow({ reservation, reservations, setReservations }) {
   const {
     reservation_id,
     first_name,
@@ -32,6 +32,11 @@ function ReservationRow({ reservation }) {
     } catch (error) {
       console.log(error);
     }
+    setReservations(
+      reservations.filter(
+        (reservation) => reservation.reservation_id !== reservation_id
+      )
+    );
   }
 
   const correctStatus = status !== "finished" && status !== "cancelled";

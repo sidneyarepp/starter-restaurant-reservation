@@ -107,6 +107,8 @@ function Dashboard() {
             <ReservationRow
               key={reservation.reservation_id}
               reservation={reservation}
+              reservations={reservations}
+              setReservations={setReservations}
             />
           ))}
         </tbody>
