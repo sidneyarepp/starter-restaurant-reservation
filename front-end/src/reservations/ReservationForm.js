@@ -10,7 +10,6 @@ function ReservationForm() {
     reservation_date: "",
     reservation_time: "",
     people: 1,
-    status: "booked",
   });
   const [errorMessage, setErrorMessage] = useState("");
 

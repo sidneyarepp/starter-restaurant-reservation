@@ -79,7 +79,7 @@ function EditReservation() {
       )
       .then((response) => {
         if (response.status - 200 < 100) {
-          history.goBack();
+          history.push(`/dashboard?date=${reservationInfo.reservation_date}`);
         }
       })
       .catch((error) => {
@@ -88,7 +88,7 @@ function EditReservation() {
   }
 
   function handleCancel() {
-    history.push("/dashboard");
+    history.goBack();
   }
 
   return (

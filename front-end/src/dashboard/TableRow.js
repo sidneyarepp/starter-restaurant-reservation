@@ -39,7 +39,7 @@ function TableRow({
         const tablesArray = tables.filter(
           (table) => table.table_id !== table_id
         );
-        const updatedTable = { ...table, table_availability: "free" };
+        const updatedTable = { ...table, table_availability: "Free" };
         const updatedTablesArray = [...tablesArray, updatedTable];
 
         const reservationsArray = reservations.filter(
@@ -72,7 +72,7 @@ function TableRow({
       <td>{table_name}</td>
       <td>{capacity}</td>
       <td data-table-id-status={table.table_id}>{table_availability}</td>
-      {table_availability === "occupied" && (
+      {table_availability === "Occupied" && (
         <td>
           <button
             data-table-id-finish={table.table_id}

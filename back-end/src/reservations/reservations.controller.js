@@ -282,7 +282,7 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
-  const reservation = req.body.data;
+  const reservation = { ...req.body.data, status: "booked" };
   const response = await service.create(reservation);
   res.status(201).json({ data: response });
 }

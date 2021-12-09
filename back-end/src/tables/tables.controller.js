@@ -47,15 +47,17 @@ function hasCapacity(req, res, next) {
   next();
 }
 
-function capacityValueCheck(req, res, next) {
+//FixMe (Working for front end tests, not for backend)
+function capacityIsANumber(req, res, next) {
   const capacity = res.locals.capacity;
-  if (capacity < 1 || typeof capacity !== "number") {
+
+  if (isNaN(capacity) || typeof capacity === "string") {
     return next({
       status: 400,
-      message: "capacity must be a positive integer.",
+      message: "capacity must be a number",
     });
   }
-  next();
+  return next();
 }
 
 function reservationValidationCheck(req, res, next) {
@@ -106,7 +108,7 @@ function tableCheck(req, res, next) {
   const tableCapacity = table.capacity;
   const partySize = reservation.people;
 
-  if (status !== "free") {
+  if (status !== "Free") {
     return next({
       status: 400,
       message:
@@ -137,7 +139,7 @@ function reservationStatusCheck(req, res, next) {
 function deleteTableCheck(req, res, next) {
   const table = res.locals.table;
   const status = table.table_availability;
-  if (status === "free") {
+  if (status === "Free") {
     return next({
       status: 400,
       message: "This table is not occupied.",
@@ -181,7 +183,7 @@ module.exports = {
   create: [
     hasData,
     hasCapacity,
-    capacityValueCheck,
+    capacityIsANumber,
     hasTableName,
     asyncErrorBoundary(create),
   ],

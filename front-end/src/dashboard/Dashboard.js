@@ -109,6 +109,7 @@ function Dashboard() {
               reservation={reservation}
               reservations={reservations}
               setReservations={setReservations}
+              today={today}
             />
           ))}
         </tbody>

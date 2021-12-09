@@ -8,7 +8,11 @@ function TablesForm() {
   const history = useHistory();
 
   function handleChange(e) {
-    setTableInfo({ ...tableInfo, [e.target.name]: e.target.value });
+    setTableInfo({
+      ...tableInfo,
+      [e.target.name]:
+        e.target.name === "capacity" ? Number(e.target.value) : e.target.value,
+    });
   }
 
   function handleSubmit(e) {
@@ -16,11 +20,12 @@ function TablesForm() {
     axios
       .post("http://localhost:5000/tables", { data: tableInfo })
       .then((response) => {
+        console.log(response.status);
         if (response.status - 200 < 100) {
           history.push(`/dashboard`);
         }
       })
-      .catch((error) => setErrorMessage(error.response.data.error));
+      .catch((error) => setErrorMessage(error?.response?.data?.error));
   }
 
   function handleCancel() {
