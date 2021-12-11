@@ -153,16 +153,20 @@ async function list(req, res) {
 
 async function create(req, res) {
   let table = req.body.data;
+  let reservation = await service.readReservation(table.reservation_id);
+
   if (table.reservation_id) {
-    const seatedTable = await service.create({
+    const newTable = await service.create({
       table_name: table.table_name,
       capacity: table.capacity,
     });
-    await service.setSeatReservation(
-      seatedTable.table_id,
-      table.reservation_id
-    );
-    res.status(201).send({ data: table });
+
+    const updatedReservation = { ...reservation[0], status: "seated" };
+
+    await service.updateReservationStatus(updatedReservation);
+
+    await service.setSeatReservation(newTable.table_id, table.reservation_id);
+    res.status(201).send({ data: newTable });
   } else {
     res.status(201).send({ data: await service.create(table) });
   }

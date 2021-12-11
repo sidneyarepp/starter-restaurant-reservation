@@ -9,7 +9,7 @@ function TableRow({
   reservations,
   setReservations,
 }) {
-  const { table_id, table_name, capacity, table_availability, reservation_id } =
+  const { table_id, table_name, capacity, reservation_id, table_availability } =
     table;
 
   async function handleFinish() {
@@ -34,8 +34,13 @@ function TableRow({
         const tablesArray = tables.filter(
           (table) => table.table_id !== table_id
         );
-        const updatedTable = { ...table, table_availability: "Free" };
+        const updatedTable = {
+          ...table,
+          table_availability: "Free",
+          reservation_id: null,
+        };
         const updatedTablesArray = [...tablesArray, updatedTable];
+        console.log(updatedTablesArray);
 
         const reservationsArray = reservations.filter(
           (reservation) => reservation.reservation_id !== reservation_id
@@ -64,13 +69,12 @@ function TableRow({
       <td>{table_id}</td>
       <td>{table_name}</td>
       <td>{capacity}</td>
-      <td data-table-id-status={table.table_id}>
-        {table.reservation_id ? "occupied" : "free"}
-      </td>
-      {table_availability === "Occupied" && (
+      <td>{reservation_id}</td>
+      <td data-table-id-status={table.table_id}>{table_availability}</td>
+      {table.reservation_id && (
         <td>
           <button
-            data-table-id-finish={table.table_id}
+            data-table-id-finish={table_id}
             className="btn btn-primary"
             onClick={handleFinish}
           >
