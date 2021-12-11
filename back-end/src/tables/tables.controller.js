@@ -8,7 +8,7 @@ const validKeys = [
   "created_at",
   "updated_at",
   "table_availability",
-  "assigned_reservation_id",
+  "reservation_id",
 ];
 
 const requiredKeys = ["table_name", "capacity"];
@@ -47,7 +47,6 @@ function hasCapacity(req, res, next) {
   next();
 }
 
-//FixMe (Working for front end tests, not for backend)
 function capacityIsANumber(req, res, next) {
   const capacity = res.locals.capacity;
 
@@ -154,7 +153,19 @@ async function list(req, res) {
 
 async function create(req, res) {
   let table = req.body.data;
-  res.status(201).send({ data: await service.create(table) });
+  if (table.reservation_id) {
+    const seatedTable = await service.create({
+      table_name: table.table_name,
+      capacity: table.capacity,
+    });
+    await service.setSeatReservation(
+      seatedTable.table_id,
+      table.reservation_id
+    );
+    res.status(201).send({ data: table });
+  } else {
+    res.status(201).send({ data: await service.create(table) });
+  }
 }
 
 async function seatReservation(req, res) {

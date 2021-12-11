@@ -9,13 +9,8 @@ function TableRow({
   reservations,
   setReservations,
 }) {
-  const {
-    table_id,
-    table_name,
-    capacity,
-    table_availability,
-    assigned_reservation_id,
-  } = table;
+  const { table_id, table_name, capacity, table_availability, reservation_id } =
+    table;
 
   async function handleFinish() {
     try {
@@ -28,7 +23,7 @@ function TableRow({
         );
 
         await axios.put(
-          `http://localhost:5000/reservations/${assigned_reservation_id}/status`,
+          `http://localhost:5000/reservations/${reservation_id}/status`,
           {
             data: {
               status: "finished",
@@ -43,12 +38,10 @@ function TableRow({
         const updatedTablesArray = [...tablesArray, updatedTable];
 
         const reservationsArray = reservations.filter(
-          (reservation) =>
-            reservation.reservation_id !== assigned_reservation_id
+          (reservation) => reservation.reservation_id !== reservation_id
         );
         const tableReservation = reservations.filter(
-          (reservation) =>
-            reservation.reservation_id === assigned_reservation_id
+          (reservation) => reservation.reservation_id === reservation_id
         );
         const updatedReservation = {
           ...tableReservation[0],
@@ -71,7 +64,9 @@ function TableRow({
       <td>{table_id}</td>
       <td>{table_name}</td>
       <td>{capacity}</td>
-      <td data-table-id-status={table.table_id}>{table_availability}</td>
+      <td data-table-id-status={table.table_id}>
+        {table.reservation_id ? "occupied" : "free"}
+      </td>
       {table_availability === "Occupied" && (
         <td>
           <button
