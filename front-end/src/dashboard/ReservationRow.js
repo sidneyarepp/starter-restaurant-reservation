@@ -21,7 +21,6 @@ function ReservationRow({ reservation, reservations, setReservations, today }) {
       const response = window.confirm(
         "Do you want to cancel this reservation? This cannot be undone."
       );
-      console.log(response);
       if (response) {
         await axios.put(
           `http://localhost:5000/reservations/${reservation_id}/status`,

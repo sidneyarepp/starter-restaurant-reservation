@@ -59,35 +59,6 @@ function capacityIsANumber(req, res, next) {
   return next();
 }
 
-function reservationValidationCheck(req, res, next) {
-  if (req.body.data) {
-    const reservation_id = req.body.data.reservation_id;
-    if (!reservation_id || reservation_id === "") {
-      return next({
-        status: 400,
-        message: "reservation_id is required.",
-      });
-    }
-    res.locals.reservation_id = reservation_id;
-  }
-  next();
-}
-
-async function reservationExists(req, res, next) {
-  if (req.body.data) {
-    const reservation_id = res.locals.reservation_id;
-    const reservationInfo = await service.readReservation(reservation_id);
-    if (!reservationInfo.length) {
-      return next({
-        status: 404,
-        message: `A reservations with reservation_id ${reservation_id} was not found.`,
-      });
-    }
-    res.locals.reservation = reservationInfo[0];
-  }
-  next();
-}
-
 async function tableExists(req, res, next) {
   const table = await service.read(req.params.table_id);
   if (!table.length) {
@@ -97,7 +68,39 @@ async function tableExists(req, res, next) {
     });
   }
   res.locals.table = table[0];
+  res.locals.reservation_id = table[0].reservation_id;
   next();
+}
+
+async function reservationValidationCheck(req, res, next) {
+  let reservation_id = null;
+  if (req.body.data) {
+    reservation_id = req.body.data.reservation_id;
+  } else if (res.locals.table) {
+    reservation_id = res.locals.table.reservation_id;
+  }
+
+  if (!reservation_id) {
+    return next({
+      status: 400,
+      message: `reservation_id is missing.`,
+    });
+  }
+  res.locals.reservation_id = reservation_id;
+  next();
+}
+
+async function reservationExists(req, res, next) {
+  const reservation = await service.readReservation(res.locals.reservation_id);
+  if (reservation.length) {
+    res.locals.reservation = reservation[0];
+    return next();
+  } else {
+    next({
+      status: 404,
+      message: `A reservation with a reservation_id of ${res.locals.reservation_id} does not exist.`,
+    });
+  }
 }
 
 function tableCheck(req, res, next) {
@@ -107,7 +110,7 @@ function tableCheck(req, res, next) {
   const tableCapacity = table.capacity;
   const partySize = reservation.people;
 
-  if (status !== "Free") {
+  if (status !== "free") {
     return next({
       status: 400,
       message:
@@ -135,10 +138,10 @@ function reservationStatusCheck(req, res, next) {
   next();
 }
 
-function deleteTableCheck(req, res, next) {
+function tableAvailabilityCheck(req, res, next) {
   const table = res.locals.table;
   const status = table.table_availability;
-  if (status === "Free") {
+  if (status === "free") {
     return next({
       status: 400,
       message: "This table is not occupied.",
@@ -152,13 +155,14 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
-  let table = req.body.data;
-  let reservation = await service.readReservation(table.reservation_id);
+  let table = { ...req.body.data, table_availability: "free" };
 
   if (table.reservation_id) {
+    const reservation = await service.readReservation(table.reservation_id);
     const newTable = await service.create({
       table_name: table.table_name,
       capacity: table.capacity,
+      table_availability: "free",
     });
 
     const updatedReservation = { ...reservation[0], status: "seated" };
@@ -174,21 +178,16 @@ async function create(req, res) {
 
 async function seatReservation(req, res) {
   const table_id = res.locals.table.table_id;
-  const reservation_id = res.locals.reservation_id;
+  const reservation_id = res.locals.reservation.reservation_id;
   const updatedReservation = { ...res.locals.reservation, status: "seated" };
   await service.updateReservationStatus(updatedReservation);
   await service.setSeatReservation(table_id, reservation_id);
-  res.sendStatus(200);
+  res.status(200).json({ data: res.locals.table });
 }
 
 async function clearReservation(req, res) {
-  if (req.body.data) {
-    const updatedReservation = {
-      ...res.locals.reservation,
-      status: "finished",
-    };
-    await service.updateReservationStatus(updatedReservation);
-  }
+  const updatedReservation = { ...res.locals.reservation, status: "finished" };
+  await service.updateReservationStatus(updatedReservation);
   await service.clearTable(req.params.table_id);
   res.sendStatus(200);
 }
@@ -206,16 +205,16 @@ module.exports = {
     hasData,
     reservationValidationCheck,
     reservationExists,
+    reservationStatusCheck,
     tableExists,
     tableCheck,
-    reservationStatusCheck,
     asyncErrorBoundary(seatReservation),
   ],
   clearReservation: [
     tableExists,
+    tableAvailabilityCheck,
     reservationValidationCheck,
     reservationExists,
-    deleteTableCheck,
     asyncErrorBoundary(clearReservation),
   ],
 };

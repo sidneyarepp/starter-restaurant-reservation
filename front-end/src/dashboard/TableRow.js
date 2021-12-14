@@ -22,32 +22,34 @@ function TableRow({
           `http://localhost:5000/tables/${table.table_id}/seat`
         );
 
-        await axios.put(
-          `http://localhost:5000/reservations/${reservation_id}/status`,
-          {
-            data: {
-              status: "finished",
-            },
-          }
-        );
+        // await axios.put(
+        //   `http://localhost:5000/reservations/${reservation_id}/status`,
+        //   {
+        //     data: {
+        //       status: "finished",
+        //     },
+        //   }
+        // );
+        await axios.get(`http://localhost:5000/tables`);
 
         const tablesArray = tables.filter(
           (table) => table.table_id !== table_id
         );
         const updatedTable = {
           ...table,
-          table_availability: "Free",
+          table_availability: "free",
           reservation_id: null,
         };
         const updatedTablesArray = [...tablesArray, updatedTable];
-        console.log(updatedTablesArray);
 
         const reservationsArray = reservations.filter(
           (reservation) => reservation.reservation_id !== reservation_id
         );
+
         const tableReservation = reservations.filter(
           (reservation) => reservation.reservation_id === reservation_id
         );
+
         const updatedReservation = {
           ...tableReservation[0],
           status: "finished",
@@ -56,6 +58,7 @@ function TableRow({
           ...reservationsArray,
           updatedReservation,
         ];
+
         setTables(updatedTablesArray);
         setReservations(updatedReservationArray);
       }

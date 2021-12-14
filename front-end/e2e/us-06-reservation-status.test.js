@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -77,7 +77,6 @@ describe("US-06 - Reservation status - E2E", () => {
       });
 
       await seatReservation(reservation.reservation_id, table.table_id);
-
       await page.reload({ waitUntil: "networkidle0" });
 
       await page.screenshot({

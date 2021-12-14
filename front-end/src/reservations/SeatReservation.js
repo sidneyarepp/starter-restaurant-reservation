@@ -69,20 +69,24 @@ function SeatReservation() {
           },
         }
       );
-      const updatedReservation = await axios.put(
-        `http://localhost:5000/reservations/${reservation.reservation_id}/status`,
-        {
-          data: {
-            status: "seated",
-          },
-        }
-      );
+      // const updatedReservation = await axios.put(
+      //   `http://localhost:5000/reservations/${reservation.reservation_id}/status`,
+      //   {
+      //     data: {
+      //       status: "seated",
+      //     },
+      //   }
+      // );
 
       if (
-        updatedTable.status - 200 < 100 &&
-        updatedReservation.status - 200 < 100
+        updatedTable.status - 200 <
+        100
+        // &&
+        // updatedReservation.status - 200 < 100
       ) {
-        history.push(`/dashboard`);
+        history.push(
+          `/dashboard?date=${reservation.reservation_date.slice(0, 10)}`
+        );
       }
     } catch (error) {
       setTablesError(error.response.data.error);

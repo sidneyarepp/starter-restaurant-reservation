@@ -23,7 +23,6 @@ function TablesForm() {
     axios
       .post("http://localhost:5000/tables", { data: tableInfo })
       .then((response) => {
-        console.log(response.status);
         if (response.status - 200 < 100) {
           history.push(`/dashboard`);
         }
