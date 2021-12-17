@@ -28,12 +28,11 @@ function EditReservation() {
   const history = useHistory();
 
   useEffect(() => {
-    const CancelToken = axios.CancelToken;
-    const source = CancelToken.source();
+    const cancelTokenSource = axios.CancelToken.source();
 
     axios
       .get("http://localhost:5000/reservations", {
-        cancelToken: source.token,
+        cancelToken: cancelTokenSource.token,
       })
       .then(({ data }) => {
         const reservationInfo = data.data.filter(
@@ -44,7 +43,7 @@ function EditReservation() {
       })
       .catch((error) => {
         if (axios.isCancel(error)) {
-          console.log("Request canceled", error.message);
+          console.log("Request canceled");
         } else {
           setErrorMessage(error.response.data.error);
         }

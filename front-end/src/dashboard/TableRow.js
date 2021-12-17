@@ -69,13 +69,11 @@ function TableRow({
 
   return (
     <tr>
-      <td>{table_id}</td>
       <td>{table_name}</td>
       <td>{capacity}</td>
-      <td>{reservation_id}</td>
       <td data-table-id-status={table.table_id}>{table_availability}</td>
-      {table.reservation_id && (
-        <td>
+      <td>
+        {table.reservation_id && (
           <button
             data-table-id-finish={table_id}
             className="btn btn-primary"
@@ -83,8 +81,8 @@ function TableRow({
           >
             Finish
           </button>
-        </td>
-      )}
+        )}
+      </td>
     </tr>
   );
 }

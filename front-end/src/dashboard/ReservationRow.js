@@ -47,39 +47,41 @@ function ReservationRow({ reservation, reservations, setReservations, today }) {
   return (
     correctStatus && (
       <tr>
-        <td>{reservation_id}</td>
-        <td>{first_name}</td>
-        <td>{last_name}</td>
+        <td>
+          {first_name} {last_name}
+        </td>
         <td>{mobile_number}</td>
         <td>{reservation_date}</td>
         <td>{reservation_time}</td>
         <td>{people}</td>
         <td data-reservation-id-status={reservation_id}>{status}</td>
-        {status === "booked" && (
-          <td>
-            <Link
-              className="btn btn-primary"
-              to={`/reservations/${reservation_id}/seat`}
-            >
-              Seat
-            </Link>
+        <td>
+          {status === "booked" && (
+            <div className="d-flex flex-column">
+              <Link
+                className="btn btn-outline-success mb-1"
+                to={`/reservations/${reservation_id}/seat`}
+              >
+                Seat
+              </Link>
 
-            <Link
-              className="btn btn-primary"
-              to={`/reservations/${reservation_id}/edit`}
-            >
-              Edit
-            </Link>
+              <Link
+                className="btn btn-outline-primary mb-1"
+                to={`/reservations/${reservation_id}/edit`}
+              >
+                Edit
+              </Link>
 
-            <button
-              className="btn btn-warning"
-              onClick={handleCancel}
-              data-reservation-id-cancel={reservation.reservation_id}
-            >
-              Cancel
-            </button>
-          </td>
-        )}
+              <button
+                className="btn btn-outline-danger"
+                onClick={handleCancel}
+                data-reservation-id-cancel={reservation.reservation_id}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+        </td>
       </tr>
     )
   );

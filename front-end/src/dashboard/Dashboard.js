@@ -6,6 +6,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 import ReservationRow from "./ReservationRow";
 import TableRow from "./TableRow";
 import axios from "axios";
+import "./Dashboard.css";
 
 /**
  * Defines the dashboard page.
@@ -72,34 +73,49 @@ function Dashboard() {
   }
 
   return (
-    <main>
-      <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
+    <main className="text-center">
+      <div className="tableHeads p-3 mt-3">
+        <h1 className="text-light">Dashboard</h1>
+        <h5 className="mb-3 text-center">
+          Reservations for date: {correctDate}
+        </h5>
+        <div className="d-flex justify-content-around mb-2">
+          <button
+            className="btn btn-info dateButtons"
+            id="previous"
+            onClick={dateChange}
+          >
+            Previous Day
+          </button>
+          <button
+            className="btn btn-info dateButtons"
+            id="today"
+            onClick={dateChange}
+          >
+            Current Day
+          </button>
+          <button
+            className="btn btn-info dateButtons"
+            id="next"
+            onClick={dateChange}
+          >
+            Next Day
+          </button>
+        </div>
       </div>
-      <div>
-        <p>{correctDate}</p>
-        <button className="btn btn-primary" id="previous" onClick={dateChange}>
-          Previous
-        </button>
-        <button className="btn btn-primary" id="today" onClick={dateChange}>
-          Today
-        </button>
-        <button className="btn btn-primary" id="next" onClick={dateChange}>
-          Next
-        </button>
+      <div className="d-md-flex mt-3">
+        <h4 className="mb-0">Reservations:</h4>
       </div>
-      <table>
-        <thead>
+      <table className="table table-striped">
+        <thead className="thead tableHeads">
           <tr>
-            <th>Reservation ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Mobile Number</th>
-            <th>Reservation Date</th>
-            <th>Reservation Time</th>
-            <th>Party Size</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th># of People</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -117,15 +133,12 @@ function Dashboard() {
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
 
-      <br />
-      <br />
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Tables</h4>
+      <div className="d-md-flex mt-4">
+        <h4 className="mb-0">Tables: </h4>
       </div>
-      <table>
-        <thead>
+      <table className="table table-striped">
+        <thead className="thead tableHeads">
           <tr>
-            <th>Table ID</th>
             <th>Table Name</th>
             <th>Capacity</th>
             <th>Table Status</th>
