@@ -172,7 +172,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const reservationDate = new Date(`${reservation_date} ${reservation_time}`);
   const timeDifference = reservationDate.getTime() - todayDate.getTime();
 
-  if (dayOfWeek === 1) {
+  if (dayOfWeek === 2) {
     next({
       status: 400,
       message: "The restaurant is closed on Tuesday.",
