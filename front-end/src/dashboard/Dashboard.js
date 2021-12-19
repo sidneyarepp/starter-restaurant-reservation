@@ -52,7 +52,7 @@ function Dashboard() {
           setTablesError(error);
         }
       });
-  }, []);
+  }, [REACT_APP_API_BASE_URL]);
 
   function loadDashboard() {
     const abortController = new AbortController();

@@ -50,7 +50,7 @@ function EditReservation() {
           setErrorMessage(error.response.data.error);
         }
       });
-  }, [reservationId]);
+  }, [reservationId, REACT_APP_API_BASE_URL]);
 
   function handleChange(e) {
     if (e.target.name === "people") {

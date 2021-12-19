@@ -53,7 +53,7 @@ function SeatReservation() {
           setTablesError(error.response.data.error);
         }
       });
-  }, [reservationId]);
+  }, [reservationId, REACT_APP_API_BASE_URL]);
 
   function handleChange(e) {
     setSelectedTable(
