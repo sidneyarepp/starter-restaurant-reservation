@@ -15,6 +15,9 @@ function ReservationForm() {
 
   const history = useHistory();
 
+  const REACT_APP_API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+
   function handleChange(e) {
     if (e.target.name === "people") {
       setReservationInfo({
@@ -33,7 +36,7 @@ function ReservationForm() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:5000/reservations", { data: reservationInfo })
+      .post(`${REACT_APP_API_BASE_URL}/reservations`, { data: reservationInfo })
       .then((response) => {
         if (response.status - 200 < 100) {
           history.push(`/dashboard?date=${reservationInfo.reservation_date}`);

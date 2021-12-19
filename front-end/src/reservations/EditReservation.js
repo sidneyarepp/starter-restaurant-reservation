@@ -26,12 +26,14 @@ function EditReservation() {
     people,
   } = reservationInfo;
   const history = useHistory();
+  const REACT_APP_API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source();
 
     axios
-      .get("http://localhost:5000/reservations", {
+      .get(`${REACT_APP_API_BASE_URL}/reservations`, {
         cancelToken: cancelTokenSource.token,
       })
       .then(({ data }) => {
@@ -68,7 +70,7 @@ function EditReservation() {
     e.preventDefault();
     axios
       .put(
-        `http://localhost:5000/reservations/${reservationInfo.reservation_id}`,
+        `${REACT_APP_API_BASE_URL}/reservations/${reservationInfo.reservation_id}`,
         {
           data: {
             ...reservationInfo,

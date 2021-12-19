@@ -6,6 +6,8 @@ function SearchReservations() {
   const [searchFormText, setSearchFormText] = useState("");
   const [foundReservations, setFoundReservations] = useState([]);
   const [reservationSearchError, setReservationSearchError] = useState(null);
+  const REACT_APP_API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
   function handleChange(e) {
     setSearchFormText(e.target.value);
@@ -20,7 +22,7 @@ function SearchReservations() {
 
     await axios
       .get(
-        `http://localhost:5000/reservations?mobile_number=${searchFormText}`,
+        `${REACT_APP_API_BASE_URL}/reservations?mobile_number=${searchFormText}`,
         {
           cancelToken: source.token,
         }

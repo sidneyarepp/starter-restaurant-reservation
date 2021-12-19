@@ -9,6 +9,8 @@ function TablesForm() {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
+  const REACT_APP_API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
   function handleChange(e) {
     setTableInfo({
@@ -21,7 +23,7 @@ function TablesForm() {
   function handleSubmit(e) {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/tables", { data: tableInfo })
+      .post(`${REACT_APP_API_BASE_URL}/tables`, { data: tableInfo })
       .then((response) => {
         if (response.status - 200 < 100) {
           history.push(`/dashboard`);

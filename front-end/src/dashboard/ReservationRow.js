@@ -15,6 +15,8 @@ function ReservationRow({ reservation, reservations, setReservations, today }) {
   } = reservation;
 
   const history = useHistory();
+  const REACT_APP_API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
   async function handleCancel() {
     try {
@@ -23,7 +25,7 @@ function ReservationRow({ reservation, reservations, setReservations, today }) {
       );
       if (response) {
         await axios.put(
-          `http://localhost:5000/reservations/${reservation_id}/status`,
+          `${REACT_APP_API_BASE_URL}/reservations/${reservation_id}/status`,
           {
             data: {
               status: "cancelled",

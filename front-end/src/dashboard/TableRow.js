@@ -12,6 +12,9 @@ function TableRow({
   const { table_id, table_name, capacity, reservation_id, table_availability } =
     table;
 
+  const REACT_APP_API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+
   async function handleFinish() {
     try {
       const response = window.confirm(
@@ -19,18 +22,10 @@ function TableRow({
       );
       if (response) {
         await axios.delete(
-          `http://localhost:5000/tables/${table.table_id}/seat`
+          `${REACT_APP_API_BASE_URL}/tables/${table.table_id}/seat`
         );
 
-        // await axios.put(
-        //   `http://localhost:5000/reservations/${reservation_id}/status`,
-        //   {
-        //     data: {
-        //       status: "finished",
-        //     },
-        //   }
-        // );
-        await axios.get(`http://localhost:5000/tables`);
+        await axios.get(`${REACT_APP_API_BASE_URL}/tables`);
 
         const tablesArray = tables.filter(
           (table) => table.table_id !== table_id

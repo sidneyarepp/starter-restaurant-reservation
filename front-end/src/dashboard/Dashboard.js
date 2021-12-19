@@ -15,6 +15,8 @@ import "./Dashboard.css";
  * @returns {JSX.Element}
  */
 function Dashboard() {
+  const REACT_APP_API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
   let location = useLocation().search;
   let correctDate = location.includes("?") ? location.split("=")[1] : today();
   const history = useHistory();
@@ -39,7 +41,7 @@ function Dashboard() {
     const source = CancelToken.source();
 
     axios
-      .get("http://localhost:5000/tables", {
+      .get(`${REACT_APP_API_BASE_URL}/tables`, {
         cancelToken: source.token,
       })
       .then(({ data }) => setTables(data.data))

@@ -13,9 +13,11 @@ function SeatReservation() {
   useEffect(() => {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
+    const REACT_APP_API_BASE_URL =
+      process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
     axios
-      .get("http://localhost:5000/tables", {
+      .get(`${REACT_APP_API_BASE_URL}/tables`, {
         cancelToken: source.token,
       })
       .then(({ data }) => setTables(data.data))
@@ -32,7 +34,7 @@ function SeatReservation() {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
     axios
-      .get("http://localhost:5000/reservations", {
+      .get(`${REACT_APP_API_BASE_URL}/reservations`, {
         cancelToken: source.token,
       })
       .then(({ data }) =>
@@ -62,21 +64,13 @@ function SeatReservation() {
     e.preventDefault();
     try {
       const updatedTable = await axios.put(
-        `http://localhost:5000/tables/${selectedTable.table_id}/seat`,
+        `${REACT_APP_API_BASE_URL}/tables/${selectedTable.table_id}/seat`,
         {
           data: {
             reservation_id: reservation.reservation_id,
           },
         }
       );
-      // const updatedReservation = await axios.put(
-      //   `http://localhost:5000/reservations/${reservation.reservation_id}/status`,
-      //   {
-      //     data: {
-      //       status: "seated",
-      //     },
-      //   }
-      // );
 
       if (
         updatedTable.status - 200 <
