@@ -9,6 +9,8 @@ function SeatReservation() {
   const [selectedTable, setSelectedTable] = useState({});
   const reservationId = Number(useLocation().pathname.split("/")[2]);
   const history = useHistory();
+  const REACT_APP_API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
   useEffect(() => {
     const CancelToken = axios.CancelToken;
