@@ -171,8 +171,13 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const reservationDate = new Date(`${reservation_date} ${reservation_time}`);
   const currentTime = Date.now();
   const timeDifference = reservationDate.getTime() < currentTime;
+  const tuesday =
+    process.env.REACT_APP_API_BASE_URL ===
+    "https://starter-restaurant-reservation-backend-9hbtldx52-sidneyarepp.vercel.app"
+      ? 2
+      : 1;
 
-  if (dayOfWeek === 1) {
+  if (dayOfWeek === tuesday) {
     next({
       status: 400,
       message: "The restaurant is closed on Tuesday.",
@@ -184,7 +189,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
       message: "The reservation must be for a day and time in the future.",
     });
   }
-  if (reservation_time < "10:30:00") {
+  if (reservation_time <= "10:30:00") {
     return next({
       status: 400,
       message: `Reservations must be set between 10:30 AM and 9:30 PM.`,
