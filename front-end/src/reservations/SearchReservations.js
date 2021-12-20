@@ -57,17 +57,16 @@ function SearchReservations() {
         />
         <button type="submit">Find</button>
       </form>
-      <table>
-        <thead>
+      <table className="table table-striped">
+        <thead className="thead tableHeads">
           <tr>
-            <th>Reservation ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Mobile Number</th>
-            <th>Reservation Date</th>
-            <th>Reservation Time</th>
-            <th>Party Size</th>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th># of People</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -75,6 +74,8 @@ function SearchReservations() {
             <ReservationRow
               key={reservation.reservation_id}
               reservation={reservation}
+              foundReservations={foundReservations}
+              setFoundReservations={setFoundReservations}
             />
           ))}
         </tbody>

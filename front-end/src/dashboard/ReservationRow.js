@@ -1,8 +1,15 @@
 import React from "react";
 import axios from "axios";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
-function ReservationRow({ reservation, reservations, setReservations, today }) {
+function ReservationRow({
+  reservation,
+  reservations,
+  setReservations,
+  today,
+  foundReservations,
+  setFoundReservations,
+}) {
   const {
     reservation_id,
     first_name,
@@ -15,6 +22,7 @@ function ReservationRow({ reservation, reservations, setReservations, today }) {
   } = reservation;
 
   const history = useHistory();
+  const location = useLocation();
   const REACT_APP_API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
@@ -32,6 +40,14 @@ function ReservationRow({ reservation, reservations, setReservations, today }) {
             },
           }
         );
+        if (location.pathname.includes("search")) {
+          setFoundReservations(
+            foundReservations.filter(
+              (reservation) => reservation.reservation_id !== reservation_id
+            )
+          );
+          return;
+        }
         setReservations(
           reservations.filter(
             (reservation) => reservation.reservation_id !== reservation_id
