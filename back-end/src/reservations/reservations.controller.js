@@ -168,19 +168,9 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const reservation_date = res.locals.reservation_date;
   const reservation_time = res.locals.reservation_time;
   const dayOfWeek = new Date(reservation_date).getDay();
-  const todayDate = new Date();
   const reservationDate = new Date(`${reservation_date} ${reservation_time}`);
-  const timeDifference = reservationDate.getTime() - todayDate.getTime();
-  console.log(
-    "reservationDate:",
-    reservationDate,
-    "timeDifference:",
-    timeDifference,
-    "dayOfTheWeek:",
-    dayOfWeek,
-    "todayDate:",
-    todayDate
-  );
+  const currentTime = Date.now();
+  const timeDifference = reservationDate.getTime() < currentTime;
 
   if (dayOfWeek === 1) {
     next({
@@ -188,7 +178,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
       message: "The restaurant is closed on Tuesday.",
     });
   }
-  if (timeDifference <= 0) {
+  if (timeDifference) {
     return next({
       status: 400,
       message: "The reservation must be for a day and time in the future.",
