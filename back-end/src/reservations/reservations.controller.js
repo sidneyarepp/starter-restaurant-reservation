@@ -176,11 +176,19 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const hour = Number(reservationTimeArray[0]);
   const minute = Number(reservationTimeArray[1]);
 
-  const reservationDate = new Date(year, month, day, hour, minute);
+  const reservationDate = new Date(year, month, day);
+  const reservationDateTime = new Date(
+    year,
+    month,
+    day,
+    hour,
+    minute
+  ).getTime();
   const dayOfWeek = reservationDate.getDay();
 
-  const currentTime = new Date();
-  const timeDifference = reservationDate < currentTime;
+  const timezoneOffset = new Date().getTimezoneOffset() * 1000;
+  const timeDifference = reservationDateTime - timezoneOffset < Date.now();
+  console.log(timeDifference);
 
   if (dayOfWeek === 2) {
     next({
