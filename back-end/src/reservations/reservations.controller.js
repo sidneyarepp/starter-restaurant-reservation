@@ -177,7 +177,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (dayOfWeek === 2) {
     next({
       status: 400,
-      message: `The restaurant is closed on Tuesday. ${Date.now()}`,
+      message: `The restaurant is closed on Tuesday. ${reservationDate} ${dayOfWeek} ${currentTime}`,
     });
   }
   if (timeDifference) {
