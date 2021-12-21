@@ -167,17 +167,25 @@ function reservationTimeIsATime(req, res, next) {
 function reservationDateAndTimeInFuture(req, res, next) {
   const reservation_date = res.locals.reservation_date;
   const reservation_time = res.locals.reservation_time;
-  const reservationDate = Date.parse(
-    `${reservation_date} ${reservation_time} EST`
-  );
-  const dayOfWeek = new Date(reservationDate).getDay();
-  const currentTime = Date.now();
+
+  const reservationDateArray = reservation_date.split("-");
+  const reservationTimeArray = reservation_time.split(":");
+  const year = Number(reservationDateArray[0]);
+  const month = Number(reservationDateArray[1] - 1);
+  const day = Number(reservationDateArray[2]);
+  const hour = Number(reservationTimeArray[0]);
+  const minute = Number(reservationTimeArray[1]);
+
+  const reservationDate = new Date(year, month, day, hour, minute);
+  const dayOfWeek = reservationDate.getDay();
+
+  const currentTime = new Date();
   const timeDifference = reservationDate < currentTime;
 
   if (dayOfWeek === 2) {
     next({
       status: 400,
-      message: `The restaurant is closed on Tuesday. ${reservationDate} ${dayOfWeek} ${currentTime}`,
+      message: `The restaurant is closed on Tuesday.`,
     });
   }
   if (timeDifference) {
