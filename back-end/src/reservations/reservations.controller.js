@@ -167,21 +167,14 @@ function reservationTimeIsATime(req, res, next) {
 function reservationDateAndTimeInFuture(req, res, next) {
   const reservation_date = res.locals.reservation_date;
   const reservation_time = res.locals.reservation_time;
-  const dayOfWeek = new Date(reservation_date).getDay();
   const reservationDate = Date.parse(
     `${reservation_date} ${reservation_time} EST`
   );
+  const dayOfWeek = new Date(reservationDate).getDay();
   const currentTime = Date.now();
   const timeDifference = reservationDate < currentTime;
-  const tuesday =
-    process.env.REACT_APP_API_BASE_URL ===
-    "https://starter-restaurant-reservation-backend-9hbtldx52-sidneyarepp.vercel.app"
-      ? 2
-      : 1;
 
-  console.log(reservationDate, timeDifference);
-
-  if (dayOfWeek === tuesday) {
+  if (dayOfWeek === 2) {
     next({
       status: 400,
       message: "The restaurant is closed on Tuesday.",
