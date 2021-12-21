@@ -173,8 +173,8 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const year = Number(reservationDateArray[0]);
   const month = Number(reservationDateArray[1] - 1);
   const day = Number(reservationDateArray[2]);
-  const hour = Number(reservationTimeArray[0]);
-  const minute = Number(reservationTimeArray[1]);
+  const hour = reservationTimeArray[0];
+  const minute = reservationTimeArray[1];
 
   const reservationDate = new Date(year, month, day);
   const reservationDateTime = new Date(
@@ -184,10 +184,12 @@ function reservationDateAndTimeInFuture(req, res, next) {
     hour,
     minute
   ).getTime();
+
   const dayOfWeek = reservationDate.getDay();
 
   const timeDifference = reservationDateTime - new Date().getTime();
-
+  console.log(reservationDateTime);
+  console.log(new Date().getTime());
   if (dayOfWeek === 2) {
     next({
       status: 400,
@@ -197,7 +199,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (timeDifference <= 0) {
     return next({
       status: 400,
-      message: `The reservation must be for a day and time in the future. ${reservationDateTime} ${dayOfWeek} ${timeDifference} ${new Date()} ${new Date().getTime()}`,
+      message: `The reservation must be for a day and time in the future.`,
     });
   }
   if (reservation_time <= "10:30:00") {
