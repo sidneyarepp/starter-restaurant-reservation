@@ -188,8 +188,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const dayOfWeek = reservationDate.getDay();
 
   const timeDifference = reservationDateTime - new Date().getTime();
-  console.log(reservationDateTime);
-  console.log(new Date().getTime());
+
   if (dayOfWeek === 2) {
     next({
       status: 400,
