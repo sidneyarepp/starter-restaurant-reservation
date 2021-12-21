@@ -186,14 +186,15 @@ function reservationDateAndTimeInFuture(req, res, next) {
   ).getTime();
   const dayOfWeek = reservationDate.getDay();
 
-  const timezoneOffset = new Date().getTimezoneOffset() * 1000;
+  const timezoneOffset = new Date().getTimezoneOffset() * 60000;
   const timeDifference = reservationDateTime - timezoneOffset < Date.now();
-  console.log(timeDifference);
 
   if (dayOfWeek === 2) {
     next({
       status: 400,
-      message: `The restaurant is closed on Tuesday.`,
+      message: `The restaurant is closed on Tuesday. ${
+        reservationDate - timezoneOffset
+      } ${new Date(reservationDate - timezoneOffset)} ${Date.now()}`,
     });
   }
   if (timeDifference) {
