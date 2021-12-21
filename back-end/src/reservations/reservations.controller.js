@@ -168,14 +168,18 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const reservation_date = res.locals.reservation_date;
   const reservation_time = res.locals.reservation_time;
   const dayOfWeek = new Date(reservation_date).getDay();
-  const reservationDate = new Date(`${reservation_date} ${reservation_time}`);
+  const reservationDate = Date.parse(
+    `${reservation_date} ${reservation_time} EST`
+  );
   const currentTime = Date.now();
-  const timeDifference = reservationDate.getTime() < currentTime;
+  const timeDifference = reservationDate < currentTime;
   const tuesday =
     process.env.REACT_APP_API_BASE_URL ===
     "https://starter-restaurant-reservation-backend-9hbtldx52-sidneyarepp.vercel.app"
       ? 2
       : 1;
+
+  console.log(reservationDate, timeDifference);
 
   if (dayOfWeek === tuesday) {
     next({
