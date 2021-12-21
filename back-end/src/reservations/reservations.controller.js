@@ -192,15 +192,15 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (dayOfWeek === 2) {
     next({
       status: 400,
-      message: `The restaurant is closed on Tuesday. ${
-        reservationDate - timezoneOffset
-      } ${new Date(reservationDate - timezoneOffset)} ${Date.now()}`,
+      message: `The restaurant is closed on Tuesday.`,
     });
   }
   if (timeDifference) {
     return next({
       status: 400,
-      message: "The reservation must be for a day and time in the future.",
+      message: `The reservation must be for a day and time in the future.  ${
+        reservationDate - timezoneOffset
+      } ${new Date(reservationDate - timezoneOffset)} ${Date.now()}`,
     });
   }
   if (reservation_time <= "10:30:00") {
