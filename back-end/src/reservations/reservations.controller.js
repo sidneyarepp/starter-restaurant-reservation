@@ -219,7 +219,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (timeDifference <= 0) {
     return next({
       status: 400,
-      message: `The reservation must be for a day and time in the future.`,
+      message: `The reservation must be for a day and time in the future. ${dayOfWeek} ${reservationDateTime} ${timeDifference}`,
     });
   }
   if (reservation_time <= "10:30:00") {
