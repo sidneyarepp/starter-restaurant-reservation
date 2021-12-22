@@ -26,6 +26,7 @@ const validProperties = [
   "updated_at",
 ];
 
+//Check to make sure the request body has a data key.
 function hasData(req, res, next) {
   if (!req.body.data) {
     return next({
@@ -36,6 +37,7 @@ function hasData(req, res, next) {
   next();
 }
 
+//When editing a current reservation the reservationExists function makes sure the reservation exists in the database.
 async function reservationExists(req, res, next) {
   const { reservation_id } = req.params;
   const [reservation] = await service.read(reservation_id);
@@ -49,11 +51,13 @@ async function reservationExists(req, res, next) {
   });
 }
 
+//When an individual reservation needs to be pulled the read function pulls the information for the reservation.
 function read(req, res) {
   const reservation = res.locals.reservation;
   res.status(200).json({ data: reservation });
 }
 
+//Verifies that all required properties are included in the request body.
 function hasRequiredProperties(req, res, next) {
   const requestProperties = Object.keys(req.body.data);
   const missingProperties = requiredProperties.filter(
@@ -69,6 +73,7 @@ function hasRequiredProperties(req, res, next) {
   next();
 }
 
+//Verifies that all properties in the request body are valid properties.
 function allPropertiesValid(req, res, next) {
   const invalidProperties = Object.keys(req.body.data).filter(
     (property) => !validProperties.includes(property)
@@ -82,6 +87,7 @@ function allPropertiesValid(req, res, next) {
   next();
 }
 
+//Verifies there is a first_name key in the request body and that it's not blank.
 function hasFirstName(req, res, next) {
   const first_name = req.body.data.first_name;
   if (first_name && first_name !== "") {
@@ -94,6 +100,7 @@ function hasFirstName(req, res, next) {
   });
 }
 
+//Verifies there is a last_name key in the request body and that it's not blank.
 function hasLastName(req, res, next) {
   const last_name = req.body.data.last_name;
   if (last_name && last_name !== "") {
@@ -106,6 +113,7 @@ function hasLastName(req, res, next) {
   });
 }
 
+//Verifies there is a mobile_number key in the request body and it isn't blank.
 function hasMobileNumber(req, res, next) {
   const mobile_number = req.body.data.mobile_number;
   if (mobile_number && mobile_number !== "") {
@@ -118,6 +126,7 @@ function hasMobileNumber(req, res, next) {
   });
 }
 
+//Verifies there is a reservation_date key in the request body and that it isn't blank.
 function hasReservationDate(req, res, next) {
   const reservation_date = req.body.data.reservation_date;
   if (reservation_date && reservation_date !== "") {
@@ -130,6 +139,7 @@ function hasReservationDate(req, res, next) {
   });
 }
 
+//Verifies that the reservation_date value is a proper date.
 function reservationDateIsADate(req, res, next) {
   const dateCheck = new Date(res.locals.reservation_date).toString();
   if (dateCheck === "Invalid Date") {
@@ -141,6 +151,7 @@ function reservationDateIsADate(req, res, next) {
   next();
 }
 
+//Verifies that the request body has a reservation_time key and that it isn't blank.
 function hasReservationTime(req, res, next) {
   const reservation_time = req.body.data.reservation_time;
   if (reservation_time && reservation_time !== "") {
@@ -153,6 +164,7 @@ function hasReservationTime(req, res, next) {
   });
 }
 
+//Verifies that the reservation_time value is a time and in the expected format.
 function reservationTimeIsATime(req, res, next) {
   const reservation_time = res.locals.reservation_time;
   if (!reservation_time.match(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)) {
@@ -164,10 +176,15 @@ function reservationTimeIsATime(req, res, next) {
   next();
 }
 
+//Takes the reservation day and time in the request body and turns it into an epoch time so it can be compared.
+//Verifies that the date in the request body isn't a Tuesday since the restaurant is closed on Tuesday.
+//Verifies that the date and time in the request body is not in the past.
+//verifies that the date and time in the request body is not before 10:30am (opening time) or after 9:30pm (an hour before the restaurant closes).
 function reservationDateAndTimeInFuture(req, res, next) {
   const reservation_date = res.locals.reservation_date;
   const reservation_time = res.locals.reservation_time;
 
+  //Breaking the reservation_date and reservation_time down to it's individual parts for time conversion to epoch time.
   const reservationDateArray = reservation_date.split("-");
   const reservationTimeArray = reservation_time.split(":");
   const year = Number(reservationDateArray[0]);
@@ -176,7 +193,10 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const hour = reservationTimeArray[0];
   const minute = reservationTimeArray[1];
 
+  //Converting the reservation_date from the request body into a standardized date.
   const reservationDate = new Date(year, month, day);
+
+  //Converting the reservation date and time into epoch time.
   const reservationDateTime = new Date(
     year,
     month,
@@ -187,6 +207,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
 
   const dayOfWeek = reservationDate.getDay();
 
+  //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.
   const timeDifference = reservationDateTime - new Date().getTime();
 
   if (dayOfWeek === 2) {
@@ -216,6 +237,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   next();
 }
 
+//Verifies that the request body has a people key and is not blank.
 function hasPeople(req, res, next) {
   const people = req.body.data.people;
   if (people && people !== "") {
@@ -228,6 +250,7 @@ function hasPeople(req, res, next) {
   });
 }
 
+//Verifies that the people field is a number (the number of peple in the party).
 function peopleIsNotNaN(req, res, next) {
   if (typeof res.locals.people !== "number") {
     return next({
@@ -238,6 +261,7 @@ function peopleIsNotNaN(req, res, next) {
   next();
 }
 
+//Verifies that the value of people is greater than 0.  This is a requirement in the form, but this verifies a request sent manually doesn't break this rule.
 function peopleGreaterThanZero(req, res, next) {
   if (!res.locals.people > 0) {
     return next({
@@ -248,6 +272,7 @@ function peopleGreaterThanZero(req, res, next) {
   next();
 }
 
+//Verifies that a table being created is not automatically given a status of seated or finished.  The default is booked, but this is to make sure someone doesn't manually load a reservation with an incorrect status.
 function correctTableCreationStatus(req, res, next) {
   const status = req.body.data.status;
   if (status === "finished" || status === "seated") {
@@ -260,6 +285,7 @@ function correctTableCreationStatus(req, res, next) {
   next();
 }
 
+//Prevents a user from editing a table that has a status of finished.
 function correctTableUpdateStatus(req, res, next) {
   const status = res.locals.reservation.status;
   if (status === "finished") {
@@ -271,6 +297,7 @@ function correctTableUpdateStatus(req, res, next) {
   next();
 }
 
+//Verifies that the request body status is one of the four valid statuses: booked, seated, finished, or cancelled.
 function hasValidStatusRequest(req, res, next) {
   const { status } = req.body.data;
   if (
@@ -287,6 +314,7 @@ function hasValidStatusRequest(req, res, next) {
   });
 }
 
+//Lists all reservations found in the database.
 async function list(req, res) {
   if (req.query.mobile_number) {
     const response = await service.search(req.query.mobile_number);
@@ -298,12 +326,14 @@ async function list(req, res) {
   res.status(200).json({ data: await service.listByDate(req.query.date) });
 }
 
+//Used to create a new reservation.
 async function create(req, res) {
   const reservation = { ...req.body.data, status: "booked" };
   const response = await service.create(reservation);
   res.status(201).json({ data: response });
 }
 
+//Used to update a reservation
 async function update(req, res) {
   const reservationId = res.locals.reservation.reservation_id;
   const changedReservation = req.body.data;
@@ -314,6 +344,7 @@ async function update(req, res) {
   res.status(200).json({ data: updatedReservation });
 }
 
+//Used to update the status of a reservation.  This is primarily used when a reservation is seated or a table is finished.
 async function updateReservationStatus(req, res) {
   const updatedReservation = { ...res.locals.reservation, ...req.body.data };
   const response = await service.updateReservationStatus(updatedReservation);

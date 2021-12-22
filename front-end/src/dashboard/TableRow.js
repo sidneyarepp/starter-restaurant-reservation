@@ -15,6 +15,7 @@ function TableRow({
   const REACT_APP_API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
+  //Envokes the controller function that sets the status of the reservation to finished, status of the table to free, and removes the reservation id from the table.
   async function handleFinish() {
     try {
       const response = window.confirm(
@@ -27,28 +28,38 @@ function TableRow({
 
         await axios.get(`${REACT_APP_API_BASE_URL}/tables`);
 
+        //Creating a new array of all the tables that aren't being finished by using the Dashboard tables state.
         const tablesArray = tables.filter(
           (table) => table.table_id !== table_id
         );
+
+        //Taking the current table being changed, passed down from the dashboard, and changing the table_availability and reservation_id values.
         const updatedTable = {
           ...table,
           table_availability: "free",
           reservation_id: null,
         };
+
+        //Creating a new array of all non-edited tables, as well as the edited table, to use for changing dashboard tables state.
         const updatedTablesArray = [...tablesArray, updatedTable];
 
+        //Creating a new array of all the reservations in the dashboard state that aren't being edited.
         const reservationsArray = reservations.filter(
           (reservation) => reservation.reservation_id !== reservation_id
         );
 
+        //Creating a new array with only the reservation that is being changed.
         const tableReservation = reservations.filter(
           (reservation) => reservation.reservation_id === reservation_id
         );
 
+        //Updating the status of the reservation that's being edited.
         const updatedReservation = {
           ...tableReservation[0],
           status: "finished",
         };
+
+        //Creating a new array of all non-edited reservations, as well as the edited reservation, to use for changing dashboard reservations state.
         const updatedReservationArray = [
           ...reservationsArray,
           updatedReservation,

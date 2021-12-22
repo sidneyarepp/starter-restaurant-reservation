@@ -24,6 +24,8 @@ function Dashboard() {
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
+
+  //Makes sure the tables shown on the dashboard, based on the tables state, are always properly sorted by table name.
   const sortedTables = tables.sort((a, b) => {
     if (a.table_name > b.table_name) {
       return 1;
@@ -34,8 +36,10 @@ function Dashboard() {
     }
   });
 
+  //When the site initially loads sets the reservations state with all reservations found in the database for the date provided (defaults to the current day).
   useEffect(loadDashboard, [correctDate]);
 
+  //When the site initially loads sets the tables state with all tables found in the database.
   useEffect(() => {
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source();
@@ -63,6 +67,7 @@ function Dashboard() {
     return () => abortController.abort();
   }
 
+  //Functionality to take care of the previous day, current day, and next day buttons on the dashboard.
   function dateChange(e) {
     const id = e.target.id;
     if (id === "previous") {

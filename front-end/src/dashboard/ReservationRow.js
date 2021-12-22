@@ -26,6 +26,7 @@ function ReservationRow({
   const REACT_APP_API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
 
+  //When a customer chooses to cancel an order it asks them if they're sure. If they select OK it will set the reservation to cancelled. There is also logic to handle cancelling orders from the search component. If the user is cancelling the order from the search component it updates the foundReservations state in the search functionality.
   async function handleCancel() {
     try {
       const response = window.confirm(
@@ -60,6 +61,7 @@ function ReservationRow({
     }
   }
 
+  //Reservations with a status of finished or cancelled are not supposed to show on the dashboard or in search results.  This verifies if the order is in one of those statuses the reservation doesn't show.
   const correctStatus = status !== "finished" && status !== "cancelled";
 
   return (

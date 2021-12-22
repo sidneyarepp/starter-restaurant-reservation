@@ -1,18 +1,7 @@
 const service = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-const validKeys = [
-  "table_name",
-  "capacity",
-  "table_id",
-  "created_at",
-  "updated_at",
-  "table_availability",
-  "reservation_id",
-];
-
-const requiredKeys = ["table_name", "capacity"];
-
+//Check to make sure the request body has a data key.
 function hasData(req, res, next) {
   if (!req.body.data) {
     return next({
@@ -23,6 +12,7 @@ function hasData(req, res, next) {
   next();
 }
 
+//Verifies the request body has a table_name key.
 function hasTableName(req, res, next) {
   const table_name = req.body.data.table_name;
   if (!table_name || table_name === "" || table_name.length < 2) {
@@ -35,6 +25,7 @@ function hasTableName(req, res, next) {
   next();
 }
 
+//Verifies that the request body has a capacity key.
 function hasCapacity(req, res, next) {
   const capacity = req.body.data.capacity;
   if (!capacity || capacity === "") {
@@ -47,6 +38,7 @@ function hasCapacity(req, res, next) {
   next();
 }
 
+//Verifies that the request body capacity value is a number.
 function capacityIsANumber(req, res, next) {
   const capacity = res.locals.capacity;
 
@@ -59,6 +51,7 @@ function capacityIsANumber(req, res, next) {
   return next();
 }
 
+//When an edit to a table is made, such as seating a reservation at it or finishing it, tableExists verifies the table is in the database.
 async function tableExists(req, res, next) {
   const table = await service.read(req.params.table_id);
   if (!table.length) {
@@ -72,6 +65,7 @@ async function tableExists(req, res, next) {
   next();
 }
 
+//Since reservation_id can come from multiple sources reservationValidationCheck makes sure that a reservation_id value comes from either the request body or the table reservation.
 async function reservationValidationCheck(req, res, next) {
   let reservation_id = null;
   if (req.body.data) {
@@ -90,6 +84,7 @@ async function reservationValidationCheck(req, res, next) {
   next();
 }
 
+//Verifies that the reservation exists in the database based on the reservation_id.
 async function reservationExists(req, res, next) {
   const reservation = await service.readReservation(res.locals.reservation_id);
   if (reservation.length) {
@@ -103,6 +98,7 @@ async function reservationExists(req, res, next) {
   }
 }
 
+//Verifies that the table has the proper status and can handle the capacity of the reservation.
 function tableCheck(req, res, next) {
   const table = res.locals.table;
   const reservation = res.locals.reservation;
@@ -126,6 +122,7 @@ function tableCheck(req, res, next) {
   next();
 }
 
+//When seating a reservation reservationStatusCheck makes sure the reservation the user is attempting to seat isn't already seated.
 function reservationStatusCheck(req, res, next) {
   const reservationStatus = res.locals.reservation.status;
 
@@ -138,6 +135,7 @@ function reservationStatusCheck(req, res, next) {
   next();
 }
 
+//When finishing a table verifies that the table is occupied.
 function tableAvailabilityCheck(req, res, next) {
   const table = res.locals.table;
   const status = table.table_availability;
@@ -150,10 +148,12 @@ function tableAvailabilityCheck(req, res, next) {
   next();
 }
 
+//Lists all tables found in the database.
 async function list(req, res) {
   res.status(200).json({ data: await service.list() });
 }
 
+//Creates a new table.
 async function create(req, res) {
   let table = { ...req.body.data, table_availability: "free" };
 
@@ -176,6 +176,7 @@ async function create(req, res) {
   }
 }
 
+//Used to seat a reservation.  Updates both the reservation status to seated and the table status to occupied.
 async function seatReservation(req, res) {
   const table_id = res.locals.table.table_id;
   const reservation_id = res.locals.reservation.reservation_id;
@@ -185,6 +186,7 @@ async function seatReservation(req, res) {
   res.status(200).json({ data: res.locals.table });
 }
 
+//Clears a table by setting the reservation status to finished and the table status to free.
 async function clearReservation(req, res) {
   const updatedReservation = { ...res.locals.reservation, status: "finished" };
   await service.updateReservationStatus(updatedReservation);
