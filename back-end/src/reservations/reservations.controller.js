@@ -211,8 +211,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
     (new Date().getTimezoneOffset() / 60) * (60 * 60 * 1000);
 
   //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.
-  const timeDifference =
-    reservationDateTime + timezoneOffset - new Date().getTime();
+  const timeDifference = reservationDateTime - new Date().getTime();
 
   if (dayOfWeek === 2) {
     next({
@@ -223,7 +222,9 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (timeDifference <= 0) {
     return next({
       status: 400,
-      message: `The reservation must be for a day and time in the future. ${dayOfWeek} ${reservationDateTime} ${timeDifference}`,
+      message: `The reservation must be for a day and time in the future. ${new Date(
+        reservationDateTime
+      )} ${new Date()} ${timezoneOffset}`,
     });
   }
   if (reservation_time <= "10:30:00") {
