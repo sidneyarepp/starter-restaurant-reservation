@@ -211,8 +211,8 @@ function reservationDateAndTimeInFuture(req, res, next) {
   //Gets the timezone offset of the client in minutes and converts it to milliseconds.
   const timezoneOffset = Number(req.body.data.timezoneOffset);
 
-  //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.  Both are in UTC time, so both need to subtract the offset that was calculated.
-  const timeDifference = true;
+  //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.
+  const timeDifference = reservationDateTime + timezoneOffset - new Date() < 0;
 
   if (dayOfWeek === 2) {
     next({
@@ -235,13 +235,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (timeDifference) {
     return next({
       status: 400,
-      message: `The reservation must be for a day and time in the future. New Date: ${new Date()}, Reservation Date: ${new Date(
-        reservationDateTime
-      )}, Reservation Date + Timezone Offset: ${new Date(
-        reservationDateTime + timezoneOffset
-      )}, Time Difference: ${
-        reservationDateTime + timezoneOffset - new Date()
-      }, timezoneOffset: ${req.body.data}`,
+      message: `The reservation must be for a day and time in the future.`,
     });
   }
   next();
