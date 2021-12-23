@@ -238,7 +238,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
         new Date() - timezoneOffset
       )} Corrected Reservation Date UTC Time: ${new Date(
         reservationDateTime
-      )} New Date: ${new Date()}`,
+      )} New Date Check: ${new Date()}`,
     });
   }
   next();
