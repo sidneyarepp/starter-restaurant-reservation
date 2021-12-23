@@ -3,7 +3,6 @@
  */
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-const moment = require("moment");
 
 const requiredProperties = [
   "first_name",
@@ -198,12 +197,17 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const reservationDate = new Date(year, month, day);
 
   //Converting the reservation date and time into epoch time.
-  const reservationDateTime = new Date(year, month, day, hour, minute);
+  const reservationDateTime = new Date(
+    `${year}-${month}-${day}T${hour}:${minute}:00`
+  ).getTime();
 
   const dayOfWeek = reservationDate.getDay();
 
+  //Gets the timezone offset of the client in minutes and converts it to milliseconds.
+  const timezoneOffset = new Date().getTimezoneOffset() * (60 * 1000);
+
   //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.  Both are in UTC time, so both need to subtract the offset that was calculated.
-  const timeDifference = true;
+  const timeDifference = reservationDateTime + timezoneOffset - new Date() < 0;
 
   if (dayOfWeek === 2) {
     next({
@@ -226,9 +230,13 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (timeDifference) {
     return next({
       status: 400,
-      message: `The reservation must be for a day and time in the future. Corrected Server UTC Time: ${
-        Intl.DateTimeFormat().resolvedOptions().timeZone
-      } Reservation Date: ${new Date(reservationDateTime)}`,
+      message: `The reservation must be for a day and time in the future. New Date: ${new Date()}, Reservation Date + Timezone Offset: ${new Date(
+        reservationDateTime + timezoneOffset
+      )}, New Date - Timezone Offset: ${new Date(
+        new Date() - timezoneOffset
+      )} Time Difference: ${
+        reservationDateTime + timezoneOffset - new Date()
+      } Timezone Offset: ${timezoneOffset}`,
     });
   }
   next();
