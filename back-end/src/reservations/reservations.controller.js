@@ -207,9 +207,10 @@ function reservationDateAndTimeInFuture(req, res, next) {
 
   const dayOfWeek = reservationDate.getDay();
 
+  //Gets the timezone offset of the client in minutes and converts it to milliseconds.
   const timezoneOffset = new Date().getTimezoneOffset() * (60 * 1000);
 
-  //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.
+  //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.  Both are in UTC time, so both need to subtract the offset that was calculated.
   const timeDifference =
     new Date() - timezoneOffset < reservationDateTime - timezoneOffset;
 
@@ -231,12 +232,12 @@ function reservationDateAndTimeInFuture(req, res, next) {
       message: `Reservations must be set for 9:30 PM or earlier.`,
     });
   }
-  if (timeDifference <= 0) {
+  if (timeDifference) {
     return next({
       status: 400,
-      message: `The reservation must be for a day and time in the future. ${new Date(
-        reservationDateTime
-      )} ${timeDifference} ${new Date() - timezoneOffset}`,
+      message: `The reservation must be for a day and time in the future. ${
+        new Date() - timezoneOffset
+      } ${new Date(reservationDateTime) - timezoneOffset}`,
     });
   }
   next();
