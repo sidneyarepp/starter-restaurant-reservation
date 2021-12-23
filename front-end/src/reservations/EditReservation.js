@@ -14,6 +14,7 @@ function EditReservation() {
     status: "",
     created_at: "",
     updated_at: "",
+    timezoneOffset: new Date().getTimezoneOffset() * 60 * 1000,
   });
   const [errorMessage, setErrorMessage] = useState("");
   const reservationId = Number(useLocation().pathname.split("/")[2]);
