@@ -209,23 +209,14 @@ function reservationDateAndTimeInFuture(req, res, next) {
 
   const timezoneOffset = new Date().getTimezoneOffset() * (60 * 1000);
 
-  const adjustedTime = new Date(new Date() - timezoneOffset).getTime();
-
   //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.
-  const timeDifference = reservationDateTime - adjustedTime;
+  const timeDifference =
+    new Date() - timezoneOffset < reservationDateTime - timezoneOffset;
 
   if (dayOfWeek === 2) {
     next({
       status: 400,
       message: `The restaurant is closed on Tuesday.`,
-    });
-  }
-  if (timeDifference <= 0) {
-    return next({
-      status: 400,
-      message: `The reservation must be for a day and time in the future. ${new Date(
-        reservationDateTime
-      )} ${new Date(adjustedTime)} ${timeDifference} ${timezoneOffset}`,
     });
   }
   if (reservation_time <= "10:30:00") {
@@ -238,6 +229,14 @@ function reservationDateAndTimeInFuture(req, res, next) {
     return next({
       status: 400,
       message: `Reservations must be set for 9:30 PM or earlier.`,
+    });
+  }
+  if (timeDifference <= 0) {
+    return next({
+      status: 400,
+      message: `The reservation must be for a day and time in the future. ${new Date(
+        reservationDateTime
+      )} ${timeDifference} ${new Date() - timezoneOffset}`,
     });
   }
   next();
