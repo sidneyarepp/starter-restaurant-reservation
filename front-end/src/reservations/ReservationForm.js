@@ -10,12 +10,11 @@ function ReservationForm() {
     reservation_date: "",
     reservation_time: "",
     people: 1,
+    timezoneOffset: new Date().getTimezoneOffset() * 60 * 1000,
   });
   const [errorMessage, setErrorMessage] = useState("");
 
   const history = useHistory();
-
-  const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
 
   const REACT_APP_API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
@@ -40,7 +39,6 @@ function ReservationForm() {
     axios
       .post(`${REACT_APP_API_BASE_URL}/reservations`, {
         data: reservationInfo,
-        timezoneOffset,
       })
       .then((response) => {
         if (response.status - 200 < 100) {

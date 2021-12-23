@@ -24,6 +24,7 @@ const validProperties = [
   "status",
   "created_at",
   "updated_at",
+  "timezoneOffset",
 ];
 
 //Check to make sure the request body has a data key.
@@ -240,7 +241,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
         reservationDateTime + timezoneOffset
       )}, Time Difference: ${
         reservationDateTime + timezoneOffset - new Date()
-      }, timezoneOffset: ${timezoneOffset}`,
+      }, timezoneOffset: ${req.body.data}`,
     });
   }
   next();
