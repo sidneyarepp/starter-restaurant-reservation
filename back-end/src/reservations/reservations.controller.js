@@ -3,6 +3,7 @@
  */
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const moment = require("moment");
 
 const requiredProperties = [
   "first_name",
@@ -190,29 +191,19 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const year = Number(reservationDateArray[0]);
   const month = Number(reservationDateArray[1] - 1);
   const day = Number(reservationDateArray[2]);
-  const hour = reservationTimeArray[0];
-  const minute = reservationTimeArray[1];
+  const hour = Number(reservationTimeArray[0]);
+  const minute = Number(reservationTimeArray[1]);
 
   //Converting the reservation_date from the request body into a standardized date.
   const reservationDate = new Date(year, month, day);
 
   //Converting the reservation date and time into epoch time.
-  const reservationDateTime = new Date(
-    year,
-    month,
-    day,
-    hour,
-    minute
-  ).getTime();
+  const reservationDateTime = new Date(year, month, day, hour, minute);
 
   const dayOfWeek = reservationDate.getDay();
 
-  //Gets the timezone offset of the client in minutes and converts it to milliseconds.
-  const timezoneOffset = new Date().getTimezoneOffset() * (60 * 1000);
-
   //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.  Both are in UTC time, so both need to subtract the offset that was calculated.
-  const timeDifference = reservationDateTime < new Date() - timezoneOffset;
-  const correctedUTCTime = new Date() - timezoneOffset;
+  const timeDifference = true;
 
   if (dayOfWeek === 2) {
     next({
@@ -235,11 +226,9 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (timeDifference) {
     return next({
       status: 400,
-      message: `The reservation must be for a day and time in the future. Corrected Server UTC Time: ${new Date(
-        correctedUTCTime
-      )} Corrected Reservation Date UTC Time: ${new Date(
-        reservationDateTime
-      )} New Date Check: ${new Date()} Timezone Offset: ${timezoneOffset}`,
+      message: `The reservation must be for a day and time in the future. Corrected Server UTC Time: ${
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+      } Reservation Date: ${new Date(reservationDateTime)}`,
     });
   }
   next();

@@ -51,6 +51,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "chromium": "^3.0.3",
+    "moment": "^2.29.1",
     "puppeteer": "^10.4.0"
   }
 }
