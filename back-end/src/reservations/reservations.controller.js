@@ -211,7 +211,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const timezoneOffset = Number(req.body.data.timezoneOffset);
 
   //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.  Both are in UTC time, so both need to subtract the offset that was calculated.
-  const timeDifference = reservationDateTime + timezoneOffset - new Date() < 0;
+  const timeDifference = true;
 
   if (dayOfWeek === 2) {
     next({
@@ -240,7 +240,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
         reservationDateTime + timezoneOffset
       )}, Time Difference: ${
         reservationDateTime + timezoneOffset - new Date()
-      }`,
+      }, timezoneOffset: ${timezoneOffset}`,
     });
   }
   next();
