@@ -234,11 +234,11 @@ function reservationDateAndTimeInFuture(req, res, next) {
   if (timeDifference) {
     return next({
       status: 400,
-      message: `The reservation must be for a day and time in the future. Corrected Server UTC Time: ${
+      message: `The reservation must be for a day and time in the future. Corrected Server UTC Time: ${new Date(
         new Date() - timezoneOffset
-      } Corrected Reservation Date UTC Time: ${
-        new Date(reservationDateTime) - timezoneOffset
-      }`,
+      )} Corrected Reservation Date UTC Time: ${new Date(
+        reservationDateTime
+      )} New Date: ${new Date()}`,
     });
   }
   next();
