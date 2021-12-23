@@ -208,7 +208,7 @@ function reservationDateAndTimeInFuture(req, res, next) {
   const dayOfWeek = reservationDate.getDay();
 
   //Gets the timezone offset of the client in minutes and converts it to milliseconds.
-  const timezoneOffset = number(req.body.data.timezoneOffset);
+  const timezoneOffset = Number(req.body.data.timezoneOffset);
 
   //Checking the difference between the current time and the reservation time to verify the reservation isn't in the past.  Both are in UTC time, so both need to subtract the offset that was calculated.
   const timeDifference = reservationDateTime + timezoneOffset - new Date() < 0;
