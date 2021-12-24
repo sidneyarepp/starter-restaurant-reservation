@@ -1,6 +1,6 @@
 # Periodic Tables Restaurant Reservation App
 
-###The periodic tables restaurant reservation app is meant to be used to a restaurant for the following purposes:
+### The periodic tables restaurant reservation app is meant to be used to a restaurant for the following purposes:
 
 - Create reservations
 - Edit reservations
@@ -21,7 +21,7 @@ All of these functions are completed through the various pages in the site:
 
 ### Dashboard
 
-![dashboard](Markdown_screenshots/1_homepage.png)
+![dashboard](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/1_homepage.png)
 
 ####The dashboard contains several sections:
 
@@ -55,9 +55,9 @@ The "Tables" section of the Dashboard shows an inventory and information about a
 
 ---
 
-###New Reservation Page
+### New Reservation Page
 
-![new reservation page](Markdown_screenshots/5_new_reservation_page.png)
+![new reservation page](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/5_new_reservation_page.png)
 
 The new reservation page allows a user to create a new reservation with the following information, all required:
 
@@ -91,7 +91,7 @@ Clicking "Submit" will create the reservation in the database and take the user 
 
 After a reservation has been created it will appear on the dashboard under the reservations section. The URL will have to include the date of the reservation as a query string, ?date=[date of reservation]}.
 
-![new reservation page](Markdown_screenshots/8_created_reservation.png)
+![new reservation page](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/8_created_reservation.png)
 
 **_Reservations with a status of booked can be seated, edited or cancelled._**
 
@@ -99,7 +99,7 @@ After a reservation has been created it will appear on the dashboard under the r
 
 When a user clicks the cancel button of the reservation a confirmation prompt will pop up. The user will have two options:
 
-![cancel reservation button clicked](Markdown_screenshots/11_dashboard_cancel_button_clicked.png)
+![cancel reservation button clicked](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/11_dashboard_cancel_button_clicked.png)
 
 - The user can click the "Cancel" button and the prompt will go away. No changes will be made to the reservation.
 - The user can click the "OK" button and the reservation's status will change to cancelled and be removed from the dashboard. **_The reservation will not be removed from the database, but the dashboard has logic to not display reservations with a status of cancelled._**
@@ -108,7 +108,7 @@ When a user clicks the cancel button of the reservation a confirmation prompt wi
 
 When a user clicks the edit button of the reservation they will be taken to a page that looks like the new reservation page. All of the logic for the reservations is the same when editing reservations as it is when creating them. The only additional logic checks that take place when editing a reservation are:
 
-![edit reservation button clicked](Markdown_screenshots/15_edit_button_clicked.png)
+![edit reservation button clicked](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/15_edit_button_clicked.png)
 
 - A check is made to verify that a reservation exists in the database with the reservation id provided
 - The status of the reservation is checked because reservations with a status of "seated", "finished", or "cancelled" cannot be edited.
@@ -121,11 +121,11 @@ Clicking "Submit" will edit the reservation in the database and take the user ba
 
 When a reservation party is ready to be seated the user can click the "Seat" button. This will take them to the seat reservation page.
 
-![seat reservation button clicked](Markdown_screenshots/18_seat_button_clicked.png)
+![seat reservation button clicked](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/18_seat_button_clicked.png)
 
 On this page the user can select a table from the dropdown. Each table has the name of the table and the maximum capacity that can be seated at it.
 
-![table select options](Markdown_screenshots/19_select_table_dropdown.png)
+![table select options](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/19_select_table_dropdown.png)
 
 Server Side Logic Checks:
 
@@ -150,10 +150,10 @@ Clicking the "Finish" button will set a reservation's will provide the user with
 Clicking "OK" will change the status of the reservation seated at the table to "finished", and the table the reservation was seated at to a status of "free". The dashboard does not display reservations in a status of "cancelled" or "finished", and choosing to finish a table will remove the reservation from the dashboard.
 
 Finish Button Clicked:
-![table select options](Markdown_screenshots/23_finish_button_clicked.png)
+![table select options](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/23_finish_button_clicked.png)
 
 "OK" on the promp clicked:
-![table select options](Markdown_screenshots/25_finish_button_clicked.png)
+![table select options](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/25_finish_button_clicked.png)
 
 **_If the user clicks the cancel button they will be taken back to the dashboard. The table for the reservation will not be set to "free", and the reservation will remain in a status of "seated"._**
 
@@ -161,7 +161,7 @@ Finish Button Clicked:
 
 ### New Table Page
 
-![new table page](Markdown_screenshots/15_edit_button_clicked.png)
+![new table page](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/15_edit_button_clicked.png)
 
 There are only two fields that have to be filled out to create a new table:
 
@@ -177,7 +177,7 @@ Server Side Logic Checks:
 
 Clicking "Submit" will create the new table and take the user back to the dashboard. The new table will appear in the "Tables" section of the dashboard.
 
-![new table created](Markdown_screenshots/30_new_table_created.png)
+![new table created](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/30_new_table_created.png)
 
 **_If the user clicks the cancel button they will be taken back to the dashboard and the table will not be created._**
 
@@ -187,7 +187,7 @@ Clicking "Submit" will create the new table and take the user back to the dashbo
 
 The search page allows a user to search for all existing reservations based on phone number. The phone number can be searched based on a partial or complete number. If any reservations are found with a matching phone number they will appear and offer the same options a user would see on the dashboard.
 
-![search page](Markdown_screenshots/22_reservation_search.png)
+![search page](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/22_reservation_search.png)
 
 ---
 
