@@ -23,7 +23,7 @@ All of these functions are completed through the various pages in the site:
 
 ![dashboard](https://github.com/sidneyarepp/starter-restaurant-reservation/blob/main/Markdown_Screenshots/1_homepage.png)
 
-####The dashboard contains several sections:
+#### The dashboard contains several sections:
 
 - Previous Day, Current Day, and Next Day buttons
 - List of reservations based on the date provided in the URL
