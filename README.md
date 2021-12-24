@@ -1,5 +1,7 @@
 # Periodic Tables Restaurant Reservation App
 
+[Live Application](https://starter-restaurant-reservation-frontend-9uc14wbps-sidneyarepp.vercel.app/dashboard)
+
 ### The periodic tables restaurant reservation app is meant to be used by a restaurant for the following purposes:
 
 - Create reservations
@@ -235,3 +237,14 @@ Database:
 - PostgreSQL
 
 Production Site Through Vercel
+
+---
+
+## Installation Instructions
+
+1. Fork and clone this repository.
+2. Run `npm i` to install project dependencies.
+3. Copy and paste your database URLs into the back-end directory .env file
+4. Run `npm run start` to start the application in the development environment (back-end and front-end are run concurrently with this command).
+
+**_The default node environment is development.  If you want to start the application in a different environment, (production, test, preview), run 'NODE_ENV="insert environment name here" npm run start'._**
