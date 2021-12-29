@@ -22,17 +22,33 @@ function TablesForm() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    const cancelTokenSource = axios.CancelToken.source();
+
     axios
-      .post(`${REACT_APP_API_BASE_URL}/tables`, { data: tableInfo })
+      .post(
+        `${REACT_APP_API_BASE_URL}/tables`,
+        { data: tableInfo },
+        { cancelToken: cancelTokenSource.token }
+      )
       .then((response) => {
         if (response.status - 200 < 100) {
           history.push(`/dashboard`);
         }
       })
-      .catch((error) => setErrorMessage(error?.response?.data?.error));
+      .catch((error) => {
+        if (axios.isCancel(error)) {
+          console.log("Request canceled");
+        } else {
+          setErrorMessage(error?.response?.data?.error);
+        }
+      });
   }
 
   function handleCancel() {
+    setTableInfo({
+      table_name: "",
+      capacity: "",
+    });
     history.goBack();
   }
 

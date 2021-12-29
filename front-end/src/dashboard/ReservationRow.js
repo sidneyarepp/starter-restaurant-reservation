@@ -29,6 +29,8 @@ function ReservationRow({
   //When a customer chooses to cancel an order it asks them if they're sure. If they select OK it will set the reservation to cancelled. There is also logic to handle cancelling orders from the search component. If the user is cancelling the order from the search component it updates the foundReservations state in the search functionality.
   async function handleCancel() {
     try {
+      const cancelTokenSource = axios.CancelToken.source();
+
       const response = window.confirm(
         "Do you want to cancel this reservation? This cannot be undone."
       );
@@ -39,7 +41,8 @@ function ReservationRow({
             data: {
               status: "cancelled",
             },
-          }
+          },
+          { cancelToken: cancelTokenSource.token }
         );
         if (location.pathname.includes("search")) {
           setFoundReservations(
@@ -57,7 +60,11 @@ function ReservationRow({
         history.push(`/dashboard?date=${today()}`);
       }
     } catch (error) {
-      console.log(error);
+      if (axios.isCancel(error)) {
+        console.log("Request canceled");
+      } else {
+        console.log(error);
+      }
     }
   }
 

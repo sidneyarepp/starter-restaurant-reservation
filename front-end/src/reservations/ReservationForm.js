@@ -35,22 +35,40 @@ function ReservationForm() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    const cancelTokenSource = axios.CancelToken.source();
 
     axios
-      .post(`${REACT_APP_API_BASE_URL}/reservations`, {
-        data: reservationInfo,
-      })
+      .post(
+        `${REACT_APP_API_BASE_URL}/reservations`,
+        {
+          data: reservationInfo,
+        },
+        { cancelToken: cancelTokenSource.token }
+      )
       .then((response) => {
         if (response.status - 200 < 100) {
           history.push(`/dashboard?date=${reservationInfo.reservation_date}`);
         }
       })
       .catch((error) => {
-        setErrorMessage(error.response.data.error);
+        if (axios.isCancel(error)) {
+          console.log("Request canceled");
+        } else {
+          setErrorMessage(error.response.data.error);
+        }
       });
   }
 
   function handleCancel() {
+    setReservationInfo({
+      first_name: "",
+      last_name: "",
+      mobile_number: "",
+      reservation_date: "",
+      reservation_time: "",
+      people: 1,
+      timezoneOffset: new Date().getTimezoneOffset() * 60 * 1000,
+    });
     history.goBack();
   }
 

@@ -69,6 +69,8 @@ function EditReservation() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    const cancelTokenSource = axios.CancelToken.source();
+
     axios
       .put(
         `${REACT_APP_API_BASE_URL}/reservations/${reservationInfo.reservation_id}`,
@@ -77,7 +79,8 @@ function EditReservation() {
             ...reservationInfo,
             reservation_time: reservation_time.slice(0, 5),
           },
-        }
+        },
+        { cancelToken: cancelTokenSource.token }
       )
       .then((response) => {
         if (response.status - 200 < 100) {
@@ -85,11 +88,28 @@ function EditReservation() {
         }
       })
       .catch((error) => {
-        setErrorMessage(error.response.data.error);
+        if (axios.isCancel(error)) {
+          console.log("Request canceled");
+        } else {
+          setErrorMessage(error.response.data.error);
+        }
       });
   }
 
   function handleCancel() {
+    setReservationInfo({
+      first_name: "",
+      last_name: "",
+      mobile_number: "",
+      reservation_date: "",
+      reservation_time: "",
+      people: 0,
+      reservation_id: "",
+      status: "",
+      created_at: "",
+      updated_at: "",
+      timezoneOffset: new Date().getTimezoneOffset() * 60 * 1000,
+    });
     history.goBack();
   }
 
