@@ -45,10 +45,6 @@ function TablesForm() {
   }
 
   function handleCancel() {
-    setTableInfo({
-      table_name: "",
-      capacity: "",
-    });
     history.goBack();
   }
 
@@ -87,7 +83,7 @@ function TablesForm() {
         <button className="btn btn-success" type="submit">
           Submit
         </button>
-        <button className="btn btn-danger" onClick={handleCancel}>
+        <button className="btn btn-danger" onClick={handleCancel} type="button">
           Cancel
         </button>
       </form>

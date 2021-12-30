@@ -97,19 +97,6 @@ function EditReservation() {
   }
 
   function handleCancel() {
-    setReservationInfo({
-      first_name: "",
-      last_name: "",
-      mobile_number: "",
-      reservation_date: "",
-      reservation_time: "",
-      people: 0,
-      reservation_id: "",
-      status: "",
-      created_at: "",
-      updated_at: "",
-      timezoneOffset: new Date().getTimezoneOffset() * 60 * 1000,
-    });
     history.goBack();
   }
 
@@ -198,7 +185,7 @@ function EditReservation() {
         <button className="btn btn-success" type="submit">
           Submit
         </button>
-        <button className="btn btn-danger" onClick={handleCancel}>
+        <button className="btn btn-danger" onClick={handleCancel} type="button">
           Cancel
         </button>
       </form>

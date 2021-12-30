@@ -103,6 +103,7 @@ function ReservationRow({
                 className="btn btn-outline-danger"
                 onClick={handleCancel}
                 data-reservation-id-cancel={reservation.reservation_id}
+                type="button"
               >
                 Cancel
               </button>

@@ -89,8 +89,7 @@ function SeatReservation() {
     }
   }
 
-  function handleCancel(e) {
-    e.preventDefault();
+  function handleCancel() {
     history.goBack();
   }
 
@@ -112,7 +111,11 @@ function SeatReservation() {
           <button className="btn btn-success" type="submit">
             Submit
           </button>
-          <button className="btn btn-danger" onClick={handleCancel}>
+          <button
+            className="btn btn-danger"
+            onClick={handleCancel}
+            type="button"
+          >
             Cancel
           </button>
         </div>
